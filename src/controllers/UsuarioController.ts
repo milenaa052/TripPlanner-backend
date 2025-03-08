@@ -20,14 +20,18 @@ export const createUsuario = async (req: Request, res: Response) => {
                 .json({error: "Todos os campos são obrigatórios"})
         }
 
-        const usuario = await UsuarioModel.create({ nome, cpf, email, senha })
+        const usuario = await UsuarioModel.create({ 
+            nome, 
+            cpf, 
+            email, 
+            senha 
+        })
 
         res.status(201).json(usuario)
     } catch (error) {
         res.status(500).json("Erro interno no servidor " + error)
     }
 }
-
 
 export const updateUsuario = async (req: Request<{id: number}>, res: Response) => {
     try {

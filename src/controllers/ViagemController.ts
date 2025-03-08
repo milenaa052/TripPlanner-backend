@@ -20,7 +20,12 @@ export const createViagem = async (req: Request, res: Response) => {
                 .json({error: "Todos os campos são obrigatórios"})
         }
 
-        const viagem = await ViagemModel.create({ localOrigem, localDestino, dataInicial, dataFinal })
+        const viagem = await ViagemModel.create({ 
+            localOrigem, 
+            localDestino, 
+            dataInicial, 
+            dataFinal 
+        })
         
         res.status(201).json(viagem)
     } catch (error) {
