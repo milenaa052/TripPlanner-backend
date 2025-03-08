@@ -13,14 +13,14 @@ export const getViagemById = async (req: Request<{id: number}>, res: Response) =
 
 export const createViagem = async (req: Request, res: Response) => {
     try {
-        const { localOrigem, localDestino, dataViagem } = req.body;
+        const { localOrigem, localDestino, dataInicial, dataFinal } = req.body;
 
-        if(!localOrigem || !localDestino || !dataViagem) {
+        if(!localOrigem || !localDestino || !dataInicial || !dataFinal) {
             return res.status(400)
                 .json({error: "Todos os campos são obrigatórios"})
         }
 
-        const viagem = await ViagemModel.create({ localOrigem, localDestino, dataViagem })
+        const viagem = await ViagemModel.create({ localOrigem, localDestino, dataInicial, dataFinal })
         
         res.status(201).json(viagem)
     } catch (error) {
@@ -30,9 +30,9 @@ export const createViagem = async (req: Request, res: Response) => {
 
 export const updateViagem = async (req: Request<{id: number}>, res: Response) => {
     try {
-        const { localOrigem, localDestino, dataViagem } = req.body;
+        const { localOrigem, localDestino, dataInicial, dataFinal } = req.body;
 
-        if(!localOrigem || !localDestino || !dataViagem) {
+        if(!localOrigem || !localDestino || !dataInicial || !dataFinal) {
             return res.status(400)
                 .json({error: "Todos os campos são obrigatórios"})
         }
@@ -46,7 +46,8 @@ export const updateViagem = async (req: Request<{id: number}>, res: Response) =>
 
         viagem.localOrigem = localOrigem;
         viagem.localDestino = localDestino;
-        viagem.dataViagem = dataViagem;
+        viagem.dataInicial = dataInicial;
+        viagem.dataFinal = dataFinal;
         
         await viagem.save();
 

@@ -5,7 +5,8 @@ class ViagemModel extends Model {
     idViagem: number | undefined
     localOrigem: string | undefined
     localDestino: string | undefined
-    dataViagem: Date | undefined
+    dataInicial: Date | undefined
+    dataFinal: Date | undefined
 }
 
 ViagemModel.init({
@@ -22,7 +23,11 @@ ViagemModel.init({
         type: DataTypes.STRING,
         allowNull: false
     },
-    dataViagem: {
+    dataInicial: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    dataFinal: {
         type: DataTypes.DATE,
         allowNull: false
     }
