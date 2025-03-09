@@ -3,7 +3,7 @@ import UsuarioModel from "../models/UsuarioModel"
 
 export const getUsuarios = async (req: Request, res: Response) => {
     const usuarios = await UsuarioModel.findAll()
-    res.send(usuarios)
+    return res.send(usuarios)
 }
 
 export const getUsuarioById = async (req: Request<{id: number}>, res: Response) => {
@@ -27,9 +27,9 @@ export const createUsuario = async (req: Request, res: Response) => {
             senha 
         })
 
-        res.status(201).json(usuario)
+        return res.status(201).json(usuario)
     } catch (error) {
-        res.status(500).json("Erro interno no servidor " + error)
+        return res.status(500).json("Erro interno no servidor " + error)
     }
 }
 
@@ -56,9 +56,9 @@ export const updateUsuario = async (req: Request<{id: number}>, res: Response) =
         
         await usuario.save();
 
-        res.status(201).json(usuario);
+        return res.status(201).json(usuario);
     } catch (error) {
-        res.status(500).json("Erro interno no suariovidor " + error)
+        return res.status(500).json("Erro interno no suariovidor " + error)
     }
 }
 
@@ -73,8 +73,8 @@ export const deleteUsuarioById = async (req: Request<{ id: number}>, res: Respon
 
         await usuario.destroy()
 
-        res.status(204).send()
+        return res.status(204).send()
     } catch (error) {
-        res.status(500).json("Erro interno no suariovidor " + error)
+        return res.status(500).json("Erro interno no suariovidor " + error)
     }
 }
