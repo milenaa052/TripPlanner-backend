@@ -94,6 +94,6 @@ export const deleteHospedagemById = async (req: Request<{id: number}>, res: Resp
         res.status(204).send()
 
     } catch (error) {
-        res.status(500).json("Erro intterno no servidor " + error)
+        res.status(500).json("Erro interno no servidor " + error)
     }
 }

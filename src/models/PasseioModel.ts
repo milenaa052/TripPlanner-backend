@@ -42,7 +42,7 @@ PasseioModel.init({
     },
     despesaId: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
     },
     viagemId: {
         type: DataTypes.INTEGER,
@@ -52,7 +52,29 @@ PasseioModel.init({
 {
     sequelize,
     modelName: "PasseioModel",
-    tableName: "passeio"
+    tableName: "passeios",
+    hooks: {
+        afterCreate: async (passeio) => {
+            const despesa = await DespesaModel.create({
+                tipoDespesa: "Passeio",
+                gasto: passeio.gastoPasseio,
+                dataDespesa: passeio.dataPasseio,
+                viagemId: passeio.viagemId,
+            });
+
+            await passeio.update({ despesaId: despesa.idDespesa });
+        },
+    },
+})
+
+PasseioModel.belongsTo(ViagemModel, {
+    foreignKey: "viagemId",
+    as: "viagens"
+})
+
+ViagemModel.hasMany(PasseioModel, {
+    foreignKey: "viagemId",
+    as: "passeios"
 })
 
 PasseioModel.belongsTo(DespesaModel, {
@@ -60,9 +82,9 @@ PasseioModel.belongsTo(DespesaModel, {
     as: "despesas"
 })
 
-PasseioModel.belongsTo(ViagemModel, {
-    foreignKey: "viagemId",
-    as: "viagens"
+DespesaModel.hasOne(PasseioModel, {
+    foreignKey: "despesaId",
+    as: "passeios"
 })
 
 export default PasseioModel;
