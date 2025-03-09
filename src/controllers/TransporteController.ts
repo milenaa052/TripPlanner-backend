@@ -3,12 +3,12 @@ import TransporteModel from "../models/TransporteModel";
 
 export const getTransportes = async (req: Request, res: Response) => {
     const transportes = await TransporteModel.findAll()
-    res.status(201).json(transportes)
+    return res.status(201).json(transportes)
 }
 
 export const getTransporteById = async (req: Request<{id: number}>, res: Response) => {
     const transporte = await TransporteModel.findByPk(req.params.id)
-    res.status(201).json(transporte)
+    return res.status(201).json(transporte)
 }
 
 export const createTransporte = async (req: Request, res: Response) => {
@@ -24,7 +24,7 @@ export const createTransporte = async (req: Request, res: Response) => {
         } = req.body
 
         if(!tipoTransporte || !origemTransporte || !destinoTransporte || !gastoTransporte || !dataTransporte || !despesaId || !viagemId) {
-            res.status(400)
+            return res.status(400)
                 .json({error: "Todos os campos são obrigatórios"})
         }
 
@@ -38,10 +38,10 @@ export const createTransporte = async (req: Request, res: Response) => {
             viagemId
         })
 
-        res.status(201).json(transporte)
+        return res.status(201).json(transporte)
 
     } catch (error) {
-        res.status(500).json("Erro interno no servidor " + error)
+        return res.status(500).json("Erro interno no servidor " + error)
     }
 }
 
@@ -58,14 +58,14 @@ export const updateTransporte = async (req: Request<{id: number}>, res: Response
         } = req.body
 
         if(!tipoTransporte || !origemTransporte || !destinoTransporte || !gastoTransporte || !dataTransporte || !despesaId || !viagemId) {
-            res.status(400)
+            return res.status(400)
                 .json({error: "Todos os campos são obrigatórios"})
         }
 
         const transporte = await TransporteModel.findByPk(req.params.id)
 
         if(!transporte) {
-            res.status(400)
+            return res.status(400)
                 .json({error: "Transporte não encontrado"})
         }
 
@@ -77,11 +77,11 @@ export const updateTransporte = async (req: Request<{id: number}>, res: Response
         transporte.despesaId = despesaId
         transporte.viagemId = viagemId
 
-        await transporte?.save()
-        res.status(201).json(transporte)
+        await transporte.save()
+        return res.status(201).json(transporte)
 
     } catch (error) {
-        res.status(500).json("Erro interno no servidor " + error)
+        return res.status(500).json("Erro interno no servidor " + error)
     }
 }
 
@@ -90,14 +90,15 @@ export const deleteTransporteById = async (req: Request<{id: number}>, res: Resp
         const transporte = await TransporteModel.findByPk(req.params.id)
 
         if(!transporte) {
-            res.status(400)
+            return res.status(400)
                 .json({error: "Transporte não encontrado"})
         }
 
         await transporte?.destroy()
-        res.status(204).send()
+        return res.status(204).send()
         
     } catch (error) {
-        res.status(500).json("Erro interno no servidor " + error)
+        
+        return res.status(500).json("Erro interno no servidor " + error)
     }
 }

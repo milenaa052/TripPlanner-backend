@@ -3,12 +3,12 @@ import HospedagemModel from "../models/HospedagemModel";
 
 export const getHospedagens = async (req: Request, res: Response) => {
     const hospedagens = await HospedagemModel.findAll()
-    res.status(201).json(hospedagens)
+   return res.status(201).json(hospedagens)
 }
 
 export const getHospedagemById = async (req: Request<{id: number}>, res: Response) => {
     const hospedagem = await HospedagemModel.findByPk(req.params.id)
-    res.status(201).json(hospedagem)
+    return res.status(201).json(hospedagem)
 }
 
 export const createHospedagem = async (req: Request, res: Response) => {
@@ -23,7 +23,7 @@ export const createHospedagem = async (req: Request, res: Response) => {
         } = req.body
 
         if(!localHospedagem || !dataCheckin || !dataCheckout || !gastoTotal || !despesaId || !viagemId) {
-            res.status(400)
+            return res.status(400)
                 .json({error: "Todos os campos devem ser preenchidos"})
         }
 
@@ -36,10 +36,10 @@ export const createHospedagem = async (req: Request, res: Response) => {
             viagemId
         })
 
-        res.status(201).json(hospedagem)
+        return res.status(201).json(hospedagem)
 
     } catch (error) {
-        res.status(500).json("Erro interno no servidor " + error)
+        return res.status(500).json("Erro interno no servidor " + error)
     }
 }
 
@@ -55,14 +55,14 @@ export const updateHospedagem = async (req: Request<{id: number}>, res: Response
         } = req.body
 
         if(!localHospedagem || !dataCheckin || !dataCheckout || !gastoTotal || !despesaId || !viagemId) {
-            res.status(400)
-                .json({error: "Todos os campos não obrigatórios"})
+            return res.status(400)
+                .json({error: "Todos os campos são obrigatórios"})
         }
 
         const hospedagem = await HospedagemModel.findByPk(req.params.id)
 
         if(!hospedagem) {
-            res.status(400)
+            return res.status(400)
                 .json({error: "Hospedagem não encontrada"})
         }
 
@@ -73,11 +73,11 @@ export const updateHospedagem = async (req: Request<{id: number}>, res: Response
         hospedagem.despesaId = despesaId
         hospedagem.viagemId = viagemId
 
-        await hospedagem?.save()
-        res.status(201).json(hospedagem)
+        await hospedagem.save()
+        return res.status(201).json(hospedagem)
 
     } catch (error) {
-        res.status(500).json("Erro interno no servidor " + error)
+       return res.status(500).json("Erro interno no servidor " + error)
     }
 }
 
@@ -91,9 +91,9 @@ export const deleteHospedagemById = async (req: Request<{id: number}>, res: Resp
         }
 
         await hospedagem?.destroy()
-        res.status(204).send()
+        return res.status(204).send()
 
     } catch (error) {
-        res.status(500).json("Erro interno no servidor " + error)
+        return res.status(500).json("Erro interno no servidor " + error)
     }
 }

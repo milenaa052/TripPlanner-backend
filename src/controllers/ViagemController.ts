@@ -3,7 +3,7 @@ import ViagemModel from "../models/ViagemModel"
 
 export const getViagens = async (req: Request, res: Response) => {
     const viagens = await ViagemModel.findAll();
-    res.send(viagens);
+    return res.send(viagens);
 }
 
 export const getViagemById = async (req: Request<{id: number}>, res: Response) => {
@@ -27,9 +27,9 @@ export const createViagem = async (req: Request, res: Response) => {
             dataFinal 
         })
         
-        res.status(201).json(viagem)
+        return res.status(201).json(viagem)
     } catch (error) {
-        res.status(500).json("Erro interno no servidor " + error)
+        return res.status(500).json("Erro interno no servidor " + error)
     }
 }
 
@@ -56,9 +56,9 @@ export const updateViagem = async (req: Request<{id: number}>, res: Response) =>
         
         await viagem.save();
 
-        res.status(201).json(viagem);
+        return res.status(201).json(viagem);
     } catch (error) {
-        res.status(500).json("Erro interno no servidor " + error)
+        return res.status(500).json("Erro interno no servidor " + error)
     }
 }
 
@@ -67,14 +67,14 @@ export const deleteViagemById = async (req: Request<{ id: number }>, res: Respon
         const viagem = await ViagemModel.findByPk(req.params.id)
         
         if(!viagem) {
-            res.status(404)
+            return res.status(404)
                 .json({error: "Viagem não encontrada"})
         }
 
-        await viagem?.destroy()
+        await viagem.destroy()
 
-        res.status(204).send()
+        return res.status(204).send()
     } catch (error) {
-        res.status(500).json("Erro interno no servidor " + error)
+        return res.status(500).json("Erro interno no servidor " + error)
     }
 }
