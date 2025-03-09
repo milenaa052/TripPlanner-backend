@@ -37,7 +37,7 @@ HospedagemModel.init({
     },
     despesaId: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
     },
     viagemId: {
         type: DataTypes.INTEGER,
@@ -46,17 +46,40 @@ HospedagemModel.init({
 },{
     sequelize,
     modelName: "HospedagemModel",
-    tableName: "hospedagem"
-})
+    tableName: "hospedagens",
+    hooks: {
+        afterCreate: async (hospedagem) => {
+            const despesa = await DespesaModel.create({
+                tipoDespesa: "Hospedagem",
+                gasto: hospedagem.gastoTotal,
+                dataDespesa: hospedagem.dataCheckout,
+                viagemId: hospedagem.viagemId,
+            });
 
-HospedagemModel.belongsTo(DespesaModel, {
-    foreignKey: "despesaId",
-    as: "despesas"
+            await hospedagem.update({ despesaId: despesa.idDespesa });
+        },
+    },
 })
 
 HospedagemModel.belongsTo(ViagemModel, {
     foreignKey: "viagemId",
     as: "viagens"
 })
+
+ViagemModel.hasMany(HospedagemModel, {
+    foreignKey: "viagemId",
+    as: "hospedagens"
+});
+
+HospedagemModel.belongsTo(DespesaModel, {
+    foreignKey: "despesaId",
+    as: "despesas",
+});
+
+DespesaModel.hasOne(HospedagemModel, {
+    foreignKey: "despesaId",
+    as: "hospedagens",
+});
+
 
 export default HospedagemModel;

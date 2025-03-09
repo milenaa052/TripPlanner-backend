@@ -44,4 +44,9 @@ DespesaModel.belongsTo(ViagemModel, {
     as: "viagens"
 })
 
+ViagemModel.hasMany(DespesaModel, {
+    foreignKey: "viagemId",
+    as: "despesas"
+})
+
 export default DespesaModel;
