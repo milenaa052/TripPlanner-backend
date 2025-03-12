@@ -1,6 +1,5 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
-import DespesaModel from "./DespesaModel";
 import ViagemModel from "./ViagemModel";
 
 class PasseioModel extends Model {
@@ -10,7 +9,6 @@ class PasseioModel extends Model {
     horaInicial: string | undefined
     horaFinal: string | undefined
     gastoPasseio: number | undefined
-    despesaId: number | undefined
     viagemId: number | undefined
 }
 
@@ -40,10 +38,6 @@ PasseioModel.init({
         type: DataTypes.FLOAT,
         allowNull: false
     },
-    despesaId: {
-        type: DataTypes.INTEGER,
-        allowNull: true
-    },
     viagemId: {
         type: DataTypes.INTEGER,
         allowNull: false
@@ -53,18 +47,6 @@ PasseioModel.init({
     sequelize,
     modelName: "PasseioModel",
     tableName: "passeios",
-    hooks: {
-        afterCreate: async (passeio) => {
-            const despesa = await DespesaModel.create({
-                tipoDespesa: "Passeio",
-                gasto: passeio.gastoPasseio,
-                dataDespesa: passeio.dataPasseio,
-                viagemId: passeio.viagemId,
-            });
-
-            await passeio.update({ despesaId: despesa.idDespesa });
-        },
-    },
 })
 
 PasseioModel.belongsTo(ViagemModel, {
@@ -74,16 +56,6 @@ PasseioModel.belongsTo(ViagemModel, {
 
 ViagemModel.hasMany(PasseioModel, {
     foreignKey: "viagemId",
-    as: "passeios"
-})
-
-PasseioModel.belongsTo(DespesaModel, {
-    foreignKey: "despesaId",
-    as: "despesas"
-})
-
-DespesaModel.hasOne(PasseioModel, {
-    foreignKey: "despesaId",
     as: "passeios"
 })
 

@@ -19,11 +19,10 @@ export const createPasseio = async (req: Request, res: Response) => {
             horaInicial,
             horaFinal,
             gastoPasseio,
-            despesaId,
             viagemId
         } = req.body
 
-        if(!dataPasseio || !localPasseio || !horaInicial || !horaFinal || !gastoPasseio || !despesaId || !viagemId) {
+        if(!dataPasseio || !localPasseio || !horaInicial || !horaFinal || !gastoPasseio || !viagemId) {
             return res.status(400)
                 .json({error: "Todos os campos são obrigatórios"})
         }
@@ -34,7 +33,6 @@ export const createPasseio = async (req: Request, res: Response) => {
             horaInicial,
             horaFinal,
             gastoPasseio,
-            despesaId,
             viagemId
         })
 
@@ -53,11 +51,10 @@ export const updatePasseio = async (req: Request<{id: number}>, res: Response) =
             horaInicial,
             horaFinal,
             gastoPasseio,
-            despesaId,
             viagemId
         } = req.body
 
-        if(!dataPasseio || !localPasseio || !horaInicial || !horaFinal || !gastoPasseio || !despesaId || !viagemId) {
+        if(!dataPasseio || !localPasseio || !horaInicial || !horaFinal || !gastoPasseio || !viagemId) {
             return res.status(400)
                 .json({error: "Todos os campos são obrigatórios"})
         }
@@ -74,7 +71,6 @@ export const updatePasseio = async (req: Request<{id: number}>, res: Response) =
         passeio.horaInicial = horaFinal
         passeio.horaFinal = horaFinal
         passeio.gastoPasseio = gastoPasseio
-        passeio.despesaId = despesaId
         passeio.viagemId = viagemId
 
         await passeio.save()

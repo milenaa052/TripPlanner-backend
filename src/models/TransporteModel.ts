@@ -1,6 +1,5 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
-import DespesaModel from "./DespesaModel";
 import ViagemModel from "./ViagemModel";
 
 class TransporteModel extends Model {
@@ -10,7 +9,6 @@ class TransporteModel extends Model {
     destinoTransporte: string | undefined
     gastoTransporte: number | undefined
     dataTransporte: Date | undefined
-    despesaId: number | undefined
     viagemId: number | undefined
 }
 
@@ -40,10 +38,6 @@ TransporteModel.init({
         type: DataTypes.DATE,
         allowNull: false
     },
-    despesaId: {
-        type: DataTypes.INTEGER,
-        allowNull: true
-    },
     viagemId: {
         type: DataTypes.INTEGER,
         allowNull: false
@@ -53,18 +47,6 @@ TransporteModel.init({
     sequelize,
     modelName: "TransporteModel",
     tableName: "transportes",
-    hooks: {
-        afterCreate: async (transporte) => {
-            const despesa = await DespesaModel.create({
-                tipoDespesa: "Transporte",
-                gasto: transporte.gastoTransporte,
-                dataDespesa: transporte.dataTransporte,
-                viagemId: transporte.viagemId,
-            });
-
-            await transporte.update({ despesaId: despesa.idDespesa });
-        },
-    },
 })
 
 TransporteModel.belongsTo(ViagemModel, {
@@ -74,16 +56,6 @@ TransporteModel.belongsTo(ViagemModel, {
 
 ViagemModel.hasMany(TransporteModel, {
     foreignKey: "viagemId",
-    as: "transportes"
-})
-
-TransporteModel.belongsTo(DespesaModel, {
-    foreignKey: "despesaId",
-    as: "despesas"
-})
-
-DespesaModel.hasOne(TransporteModel, {
-    foreignKey: "despesaId",
     as: "transportes"
 })
 
