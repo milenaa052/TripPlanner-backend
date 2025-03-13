@@ -19,11 +19,10 @@ export const createTransporte = async (req: Request, res: Response) => {
             destinoTransporte,
             gastoTransporte,
             dataTransporte,
-            despesaId,
             viagemId
         } = req.body
 
-        if(!tipoTransporte || !origemTransporte || !destinoTransporte || !gastoTransporte || !dataTransporte || !despesaId || !viagemId) {
+        if(!tipoTransporte || !origemTransporte || !destinoTransporte || !gastoTransporte || !dataTransporte || !viagemId) {
             return res.status(400)
                 .json({error: "Todos os campos são obrigatórios"})
         }
@@ -34,7 +33,6 @@ export const createTransporte = async (req: Request, res: Response) => {
             destinoTransporte,
             gastoTransporte,
             dataTransporte,
-            despesaId,
             viagemId
         })
 
@@ -53,11 +51,10 @@ export const updateTransporte = async (req: Request<{id: number}>, res: Response
             destinoTransporte,
             gastoTransporte,
             dataTransporte,
-            despesaId,
             viagemId
         } = req.body
 
-        if(!tipoTransporte || !origemTransporte || !destinoTransporte || !gastoTransporte || !dataTransporte || !despesaId || !viagemId) {
+        if(!tipoTransporte || !origemTransporte || !destinoTransporte || !gastoTransporte || !dataTransporte || !viagemId) {
             return res.status(400)
                 .json({error: "Todos os campos são obrigatórios"})
         }
@@ -74,7 +71,6 @@ export const updateTransporte = async (req: Request<{id: number}>, res: Response
         transporte.destinoTransporte = destinoTransporte
         transporte.gastoTransporte = gastoTransporte
         transporte.dataTransporte = dataTransporte
-        transporte.despesaId = despesaId
         transporte.viagemId = viagemId
 
         await transporte.save()

@@ -4,7 +4,7 @@ import { createDespesa, deleteDespesaById, getDespesas, getDespesasById, updateD
 const router = express.Router()
 
 router.get("/despesas", getDespesas)
-router.get("despesa/:id", getDespesasById)
+router.get("/despesa/:id", getDespesasById)
 router.post("/cadastro-despesa", createDespesa)
 router.put("/despesa/:id", updateDespesa)
 router.delete("/despesa/:id", deleteDespesaById)
