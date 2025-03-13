@@ -22,7 +22,7 @@ export const createPasseio = async (req: Request, res: Response) => {
             viagemId
         } = req.body
 
-        if(!dataPasseio || !localPasseio || !horaInicial || !horaFinal || !gastoPasseio || !viagemId) {
+        if(!dataPasseio || !localPasseio || !horaInicial || !horaFinal || !viagemId) {
             return res.status(400)
                 .json({error: "Todos os campos são obrigatórios"})
         }
@@ -54,7 +54,7 @@ export const updatePasseio = async (req: Request<{id: number}>, res: Response) =
             viagemId
         } = req.body
 
-        if(!dataPasseio || !localPasseio || !horaInicial || !horaFinal || !gastoPasseio || !viagemId) {
+        if(!dataPasseio || !localPasseio || !horaInicial || !horaFinal || !viagemId) {
             return res.status(400)
                 .json({error: "Todos os campos são obrigatórios"})
         }

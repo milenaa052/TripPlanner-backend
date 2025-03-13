@@ -1,6 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
 import ViagemModel from "./ViagemModel";
+import DespesaModel from "./DespesaModel";
 
 class PasseioModel extends Model {
     idPasseio: number | undefined
@@ -36,7 +37,7 @@ PasseioModel.init({
     },
     gastoPasseio: {
         type: DataTypes.FLOAT,
-        allowNull: false
+        allowNull: true
     },
     viagemId: {
         type: DataTypes.INTEGER,
@@ -47,6 +48,16 @@ PasseioModel.init({
     sequelize,
     modelName: "PasseioModel",
     tableName: "passeios",
+    hooks: {
+        async afterCreate(passeio) {
+            await DespesaModel.create({
+                tipoDespesa: "Passeio",
+                gasto: passeio.gastoPasseio,
+                dataDespesa: passeio.dataPasseio,
+                viagemId: passeio.viagemId
+            })
+        }
+    }
 })
 
 PasseioModel.belongsTo(ViagemModel, {
