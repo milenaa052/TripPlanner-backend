@@ -51,10 +51,30 @@ PasseioModel.init({
     hooks: {
         async afterCreate(passeio) {
             await DespesaModel.create({
-                tipoDespesa: "Passeio",
+                tipoDespesa: `Passeio - ${passeio.localPasseio}`,
                 gasto: passeio.gastoPasseio,
                 dataDespesa: passeio.dataPasseio,
-                viagemId: passeio.viagemId
+                viagemId: passeio.viagemId,
+                passeioId: passeio.idPasseio
+            })
+        }, 
+        async afterUpdate(passeio) {
+            await DespesaModel.update({
+                tipoDespesa: `Passeio - ${passeio.localPasseio}`,
+                gasto: passeio.gastoPasseio,
+                dataDespesa: passeio.dataPasseio
+            },
+            { where: { 
+                viagemId: passeio.viagemId,
+                passeioId: passeio.idPasseio 
+            } })
+        },
+        async afterDestroy(passeio) {
+            await DespesaModel.destroy({
+                where: {
+                    viagemId: passeio.viagemId,
+                    passeioId: passeio.idPasseio
+                }
             })
         }
     }

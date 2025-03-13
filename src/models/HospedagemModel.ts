@@ -45,10 +45,31 @@ HospedagemModel.init({
     hooks: {
         async afterCreate(hospedagem) {
             await DespesaModel.create({
-                tipoDespesa: "Hospedagem",
+                tipoDespesa: `Hospedagem - ${hospedagem.localHospedagem}`,
                 gasto: hospedagem.gastoTotal,
                 dataDespesa: hospedagem.dataCheckin,
-                viagemId: hospedagem.viagemId
+                viagemId: hospedagem.viagemId,
+                hospedagemId: hospedagem.idHospedagem
+            })
+        },
+        async afterUpdate(hospedagem) {
+            await DespesaModel.update({
+                tipoDespesa: `Hospedagem - ${hospedagem.localHospedagem}`,
+                gasto: hospedagem.gastoTotal,
+                dataDespesa: hospedagem.dataCheckin
+            },
+            { where: { 
+                viagemId: hospedagem.viagemId,
+                hospedagemId: hospedagem.idHospedagem
+            } }
+            )
+        },
+        async afterDestroy(hospedagem) {
+            await DespesaModel.destroy({
+                where: {
+                    viagemId: hospedagem.viagemId,
+                    hospedagemId: hospedagem.idHospedagem
+                }
             })
         }
     }
