@@ -50,13 +50,15 @@ PasseioModel.init({
     tableName: "passeios",
     hooks: {
         async afterCreate(passeio) {
-            await DespesaModel.create({
-                tipoDespesa: `Passeio - ${passeio.localPasseio}`,
-                gasto: passeio.gastoPasseio,
-                dataDespesa: passeio.dataPasseio,
-                viagemId: passeio.viagemId,
-                passeioId: passeio.idPasseio
-            })
+            if(typeof passeio.gastoPasseio === "number" && passeio.gastoPasseio > 1) {
+                await DespesaModel.create({
+                    tipoDespesa: `Passeio - ${passeio.localPasseio}`,
+                    gasto: passeio.gastoPasseio,
+                    dataDespesa: passeio.dataPasseio,
+                    viagemId: passeio.viagemId,
+                    passeioId: passeio.idPasseio
+                })
+            }
         }, 
         async afterUpdate(passeio) {
             await DespesaModel.update({

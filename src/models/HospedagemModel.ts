@@ -1,7 +1,8 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, FLOAT, Model } from "sequelize";
 import sequelize from "../config/database";
 import ViagemModel from "./ViagemModel";
 import DespesaModel from "./DespesaModel";
+import { NUMBER } from "sequelize";
 
 class HospedagemModel extends Model {
     idHospedagem: number | undefined
@@ -44,13 +45,15 @@ HospedagemModel.init({
     tableName: "hospedagens",
     hooks: {
         async afterCreate(hospedagem) {
-            await DespesaModel.create({
-                tipoDespesa: `Hospedagem - ${hospedagem.localHospedagem}`,
-                gasto: hospedagem.gastoTotal,
-                dataDespesa: hospedagem.dataCheckin,
-                viagemId: hospedagem.viagemId,
-                hospedagemId: hospedagem.idHospedagem
-            })
+            if(typeof hospedagem.gastoTotal === 'number' && hospedagem.gastoTotal > 1) {
+                await DespesaModel.create({
+                    tipoDespesa: `Hospedagem - ${hospedagem.localHospedagem}`,
+                    gasto: hospedagem.gastoTotal,
+                    dataDespesa: hospedagem.dataCheckin,
+                    viagemId: hospedagem.viagemId,
+                    hospedagemId: hospedagem.idHospedagem
+                })
+            }
         },
         async afterUpdate(hospedagem) {
             await DespesaModel.update({

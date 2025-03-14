@@ -50,13 +50,15 @@ TransporteModel.init({
     tableName: "transportes",
     hooks: {
         async afterCreate(transporte){
-            await DespesaModel.create({
-                tipoDespesa: `Transporte - Até: ${transporte.destinoTransporte}`,
-                gasto: transporte.gastoTransporte,
-                dataDespesa: transporte.dataTransporte,
-                viagemId: transporte.viagemId,
-                transporteId: transporte.idTransporte
-            })
+            if(typeof transporte.gastoTransporte === "number" && transporte.gastoTransporte > 1) {
+                await DespesaModel.create({
+                    tipoDespesa: `Transporte - Até: ${transporte.destinoTransporte}`,
+                    gasto: transporte.gastoTransporte,
+                    dataDespesa: transporte.dataTransporte,
+                    viagemId: transporte.viagemId,
+                    transporteId: transporte.idTransporte
+                })   
+            }
         }, 
         async afterUpdate(transporte) {
             await DespesaModel.update({
