@@ -72,10 +72,9 @@ TransporteModel.init({
         async afterDestroy(transporte) {
             await DespesaModel.destroy({
                 where: {
-                    viagemId: transporte.viagemId,
                     transporteId: transporte.idTransporte
                 }
-            })
+            });
         }
     }
 })

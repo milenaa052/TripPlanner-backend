@@ -72,10 +72,9 @@ PasseioModel.init({
         async afterDestroy(passeio) {
             await DespesaModel.destroy({
                 where: {
-                    viagemId: passeio.viagemId,
                     passeioId: passeio.idPasseio
                 }
-            })
+            });
         }
     }
 })

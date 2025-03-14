@@ -40,15 +40,18 @@ DespesaModel.init({
     },
     hospedagemId: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: true,
+        onDelete: "CASCADE"
     },
     transporteId: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: true,
+        onDelete: "CASCADE"
     },
     passeioId: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: true,
+        onDelete: "CASCADE"
     }
 },
 {

@@ -67,10 +67,9 @@ HospedagemModel.init({
         async afterDestroy(hospedagem) {
             await DespesaModel.destroy({
                 where: {
-                    viagemId: hospedagem.viagemId,
                     hospedagemId: hospedagem.idHospedagem
                 }
-            })
+            });
         }
     }
 })
