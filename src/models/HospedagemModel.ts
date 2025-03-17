@@ -1,6 +1,8 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, FLOAT, Model } from "sequelize";
 import sequelize from "../config/database";
 import ViagemModel from "./ViagemModel";
+import DespesaModel from "./DespesaModel";
+import { NUMBER } from "sequelize";
 
 class HospedagemModel extends Model {
     idHospedagem: number | undefined
@@ -31,7 +33,7 @@ HospedagemModel.init({
     },
     gastoTotal: {
         type: DataTypes.FLOAT,
-        allowNull: false
+        allowNull: true
     },
     viagemId: {
         type: DataTypes.INTEGER,
@@ -41,6 +43,38 @@ HospedagemModel.init({
     sequelize,
     modelName: "HospedagemModel",
     tableName: "hospedagens",
+    hooks: {
+        async afterCreate(hospedagem) {
+            if(typeof hospedagem.gastoTotal === 'number' && hospedagem.gastoTotal > 1) {
+                await DespesaModel.create({
+                    tipoDespesa: `Hospedagem - ${hospedagem.localHospedagem}`,
+                    gasto: hospedagem.gastoTotal,
+                    dataDespesa: hospedagem.dataCheckin,
+                    viagemId: hospedagem.viagemId,
+                    hospedagemId: hospedagem.idHospedagem
+                })
+            }
+        },
+        async afterUpdate(hospedagem) {
+            await DespesaModel.update({
+                tipoDespesa: `Hospedagem - ${hospedagem.localHospedagem}`,
+                gasto: hospedagem.gastoTotal,
+                dataDespesa: hospedagem.dataCheckin
+            },
+            { where: { 
+                viagemId: hospedagem.viagemId,
+                hospedagemId: hospedagem.idHospedagem
+            } }
+            )
+        },
+        async afterDestroy(hospedagem) {
+            await DespesaModel.destroy({
+                where: {
+                    hospedagemId: hospedagem.idHospedagem
+                }
+            });
+        }
+    }
 })
 
 HospedagemModel.belongsTo(ViagemModel, {

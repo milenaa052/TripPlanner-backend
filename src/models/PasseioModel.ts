@@ -1,6 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
 import ViagemModel from "./ViagemModel";
+import DespesaModel from "./DespesaModel";
 
 class PasseioModel extends Model {
     idPasseio: number | undefined
@@ -36,7 +37,7 @@ PasseioModel.init({
     },
     gastoPasseio: {
         type: DataTypes.FLOAT,
-        allowNull: false
+        allowNull: true
     },
     viagemId: {
         type: DataTypes.INTEGER,
@@ -47,6 +48,37 @@ PasseioModel.init({
     sequelize,
     modelName: "PasseioModel",
     tableName: "passeios",
+    hooks: {
+        async afterCreate(passeio) {
+            if(typeof passeio.gastoPasseio === "number" && passeio.gastoPasseio > 1) {
+                await DespesaModel.create({
+                    tipoDespesa: `Passeio - ${passeio.localPasseio}`,
+                    gasto: passeio.gastoPasseio,
+                    dataDespesa: passeio.dataPasseio,
+                    viagemId: passeio.viagemId,
+                    passeioId: passeio.idPasseio
+                })
+            }
+        }, 
+        async afterUpdate(passeio) {
+            await DespesaModel.update({
+                tipoDespesa: `Passeio - ${passeio.localPasseio}`,
+                gasto: passeio.gastoPasseio,
+                dataDespesa: passeio.dataPasseio
+            },
+            { where: { 
+                viagemId: passeio.viagemId,
+                passeioId: passeio.idPasseio 
+            } })
+        },
+        async afterDestroy(passeio) {
+            await DespesaModel.destroy({
+                where: {
+                    passeioId: passeio.idPasseio
+                }
+            });
+        }
+    }
 })
 
 PasseioModel.belongsTo(ViagemModel, {

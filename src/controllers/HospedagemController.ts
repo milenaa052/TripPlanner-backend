@@ -21,7 +21,7 @@ export const createHospedagem = async (req: Request, res: Response) => {
             viagemId 
         } = req.body
 
-        if(!localHospedagem || !dataCheckin || !dataCheckout || !gastoTotal || !viagemId) {
+        if(!localHospedagem || !dataCheckin || !dataCheckout || !viagemId) {
             return res.status(400)
                 .json({error: "Todos os campos devem ser preenchidos"})
         }
@@ -51,7 +51,7 @@ export const updateHospedagem = async (req: Request<{id: number}>, res: Response
             viagemId
         } = req.body
 
-        if(!localHospedagem || !dataCheckin || !dataCheckout || !gastoTotal || !viagemId) {
+        if(!localHospedagem || !dataCheckin || !dataCheckout || !viagemId) {
             return res.status(400)
                 .json({error: "Todos os campos são obrigatórios"})
         }
