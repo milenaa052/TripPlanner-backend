@@ -12,6 +12,12 @@ const port = 3000
 
 app.use(express.json());
 
+const cors = require('cors');
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
+
 app.get("/", (req, res) => {
     res.send("Hello World!")
 })
