@@ -68,7 +68,7 @@ export const updatePasseio = async (req: Request<{id: number}>, res: Response) =
 
         passeio.dataPasseio = dataPasseio
         passeio.localPasseio = localPasseio
-        passeio.horaInicial = horaFinal
+        passeio.horaInicial = horaInicial
         passeio.horaFinal = horaFinal
         passeio.gastoPasseio = gastoPasseio
         passeio.viagemId = viagemId
