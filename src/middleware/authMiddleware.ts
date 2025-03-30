@@ -10,8 +10,8 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     }
 
     try {
-        const decoded: any = verificaToken(token);
-        (req as any).usuario = decoded;
+        const decoded = verificaToken(token)
+        req.body.usuario = decoded
         next()
     } catch (error) {
         return res.status(401)
