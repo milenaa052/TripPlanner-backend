@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import UsuarioModel from "../models/UsuarioModel";
+import {gerarToken } from "../utils/jwt"
 
 export const loginUsuario = async (req: Request, res: Response) => {
     const { email, senha } = req.body
@@ -22,5 +23,7 @@ export const loginUsuario = async (req: Request, res: Response) => {
             .json({error: "Email ou senha inválidos"})
     }
 
-    return res.status(200).json({mensagem: "Login realizado com sucesso"})
+    const token = gerarToken(usuario)
+
+    return res.status(200).json({mensagem: "Login realizado com sucesso", token})
 }
