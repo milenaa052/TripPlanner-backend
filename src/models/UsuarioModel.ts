@@ -47,4 +47,10 @@ UsuarioModel.beforeCreate(async (usuario: UsuarioModel) => {
     await usuario.hashSenha()
 });
 
+UsuarioModel.beforeUpdate(async (usuario: UsuarioModel) => {
+    if(usuario.changed('senha')) {
+        await usuario.hashSenha()
+    }
+});
+
 export default UsuarioModel
