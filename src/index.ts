@@ -6,6 +6,7 @@ import DespesaRoutes from "./routes/DespesaRoutes"
 import HospedagemRoutes from "./routes/HospedagemRoutes"
 import TransporteRoutes from "./routes/TransporteRoutes"
 import PasseioRoutes from "./routes/PasseioRoutes"
+import loginRoutes from "./routes/loginRoutes"
 
 const app = express()
 const port = 3000
@@ -28,6 +29,7 @@ app.use(DespesaRoutes);
 app.use(HospedagemRoutes);
 app.use(TransporteRoutes);
 app.use(PasseioRoutes);
+app.use(loginRoutes);
 
 sequelize
     .sync({ alter: true })

@@ -6,7 +6,7 @@ export const getViagens = async (req: Request, res: Response) => {
     return res.send(viagens);
 }
 
-export const getViagemById = async (req: Request<{id: number}>, res: Response) => {
+export const getViagemById = async (req: Request<{id: string}>, res: Response) => {
     const viagens = await ViagemModel.findByPk(req.params.id);
     return res.json(viagens);
 }
@@ -34,7 +34,7 @@ export const createViagem = async (req: Request, res: Response) => {
     }
 }
 
-export const updateViagem = async (req: Request<{id: number}>, res: Response) => {
+export const updateViagem = async (req: Request<{id: string}>, res: Response) => {
     try {
         const { localOrigem, localDestino, codigoPais, dataInicial, dataFinal } = req.body;
 
@@ -64,7 +64,7 @@ export const updateViagem = async (req: Request<{id: number}>, res: Response) =>
     }
 }
 
-export const deleteViagemById = async (req: Request<{ id: number }>, res: Response) => {
+export const deleteViagemById = async (req: Request<{ id: string }>, res: Response) => {
     try {
         const viagem = await ViagemModel.findByPk(req.params.id)
         

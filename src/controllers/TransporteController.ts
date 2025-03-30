@@ -6,7 +6,7 @@ export const getTransportes = async (req: Request, res: Response) => {
     return res.status(201).json(transportes)
 }
 
-export const getTransporteById = async (req: Request<{id: number}>, res: Response) => {
+export const getTransporteById = async (req: Request<{id: string}>, res: Response) => {
     const transporte = await TransporteModel.findByPk(req.params.id)
     return res.status(201).json(transporte)
 }
@@ -43,7 +43,7 @@ export const createTransporte = async (req: Request, res: Response) => {
     }
 }
 
-export const updateTransporte = async (req: Request<{id: number}>, res: Response) => {
+export const updateTransporte = async (req: Request<{id: string}>, res: Response) => {
     try {
         const { 
             tipoTransporte,
@@ -81,7 +81,7 @@ export const updateTransporte = async (req: Request<{id: number}>, res: Response
     }
 }
 
-export const deleteTransporteById = async (req: Request<{id: number}>, res: Response) => {
+export const deleteTransporteById = async (req: Request<{id: string}>, res: Response) => {
     try{
         const transporte = await TransporteModel.findByPk(req.params.id)
 

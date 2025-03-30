@@ -12,6 +12,10 @@ class UsuarioModel extends Model {
     public async hashSenha() {
         this.senha = await bcrypt.hash(this.senha!, 10)
     }
+
+    public async validarSenha(senha: string) : Promise<boolean> {
+        return await bcrypt.compare(senha, this.senha!)
+    }
 }
 
 UsuarioModel.init({

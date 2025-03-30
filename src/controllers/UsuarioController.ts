@@ -6,7 +6,7 @@ export const getUsuarios = async (req: Request, res: Response) => {
     return res.send(usuarios)
 }
 
-export const getUsuarioById = async (req: Request<{id: number}>, res: Response) => {
+export const getUsuarioById = async (req: Request<{id: string}>, res: Response) => {
     const usuarios = await UsuarioModel.findByPk(req.params.id);
     return res.json(usuarios);
 }
@@ -33,7 +33,7 @@ export const createUsuario = async (req: Request, res: Response) => {
     }
 }
 
-export const updateUsuario = async (req: Request<{id: number}>, res: Response) => {
+export const updateUsuario = async (req: Request<{id: string}>, res: Response) => {
     try {
         const { nome, cpf, email, senha } = req.body;
 
@@ -62,7 +62,7 @@ export const updateUsuario = async (req: Request<{id: number}>, res: Response) =
     }
 }
 
-export const deleteUsuarioById = async (req: Request<{ id: number}>, res: Response) => {  
+export const deleteUsuarioById = async (req: Request<{ id: string}>, res: Response) => {  
     try {
         const usuario = await UsuarioModel.findByPk(req.params.id)
         

@@ -1,12 +1,14 @@
 import express from "express"
 import { getUsuarios, getUsuarioById, createUsuario, updateUsuario, deleteUsuarioById } from "../controllers/UsuarioController"
-
+import { authMiddleware } from "../middleware/authMiddleware"
+ 
 const router = express.Router();
 
-router.get("/usuarios", getUsuarios);
-router.get("/usuario/:id", getUsuarioById)
 router.post("/cadastro-usuario", createUsuario)
-router.put("/usuario/:id", updateUsuario)
-router.delete("/usuario/:id", deleteUsuarioById)
+
+router.get("/usuarios", authMiddleware, getUsuarios)
+router.get("/usuario/:id", authMiddleware, getUsuarioById)
+router.put("/usuario/:id", authMiddleware, updateUsuario)
+router.delete("/usuario/:id", authMiddleware, deleteUsuarioById)
 
 export default router;

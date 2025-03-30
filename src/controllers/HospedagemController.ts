@@ -6,7 +6,7 @@ export const getHospedagens = async (req: Request, res: Response) => {
    return res.status(201).json(hospedagens)
 }
 
-export const getHospedagemById = async (req: Request<{id: number}>, res: Response) => {
+export const getHospedagemById = async (req: Request<{id: string}>, res: Response) => {
     const hospedagem = await HospedagemModel.findByPk(req.params.id)
     return res.status(201).json(hospedagem)
 }
@@ -41,7 +41,7 @@ export const createHospedagem = async (req: Request, res: Response) => {
     }
 }
 
-export const updateHospedagem = async (req: Request<{id: number}>, res: Response) => {
+export const updateHospedagem = async (req: Request<{id: string}>, res: Response) => {
     try {
         const { 
             localHospedagem,
@@ -77,7 +77,7 @@ export const updateHospedagem = async (req: Request<{id: number}>, res: Response
     }
 }
 
-export const deleteHospedagemById = async (req: Request<{id: number}>, res: Response) => {
+export const deleteHospedagemById = async (req: Request<{id: string}>, res: Response) => {
     try {
         const hospedagem = await HospedagemModel.findByPk(req.params.id)
 
