@@ -1,5 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
+import bcrypt from 'bcrypt';
 
 class UsuarioModel extends Model {
     idUsuario: number | undefined
@@ -7,6 +8,10 @@ class UsuarioModel extends Model {
     cpf: string | undefined
     email: string | undefined
     senha: string | undefined
+
+    public async hashSenha() {
+        this.senha = await bcrypt.hash(this.senha!, 10)
+    }
 }
 
 UsuarioModel.init({
@@ -37,5 +42,9 @@ UsuarioModel.init({
     modelName: "UsuarioModel",
     tableName: "usuarios"
 })
+
+UsuarioModel.beforeCreate(async (usuario: UsuarioModel) => {
+    await usuario.hashSenha()
+});
 
 export default UsuarioModel
