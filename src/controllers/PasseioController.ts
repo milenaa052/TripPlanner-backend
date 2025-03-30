@@ -6,7 +6,7 @@ export const getPasseios = async (req: Request, res: Response) => {
     return res.status(201).json(passeios)
 }
 
-export const getPasseioById = async (req: Request<{id: number}>, res: Response) => {
+export const getPasseioById = async (req: Request<{id: string}>, res: Response) => {
     const passeio = await PasseioModel.findByPk(req.params.id)
     return res.status(201).json(passeio)
 }
@@ -43,7 +43,7 @@ export const createPasseio = async (req: Request, res: Response) => {
     }
 }
 
-export const updatePasseio = async (req: Request<{id: number}>, res: Response) => {
+export const updatePasseio = async (req: Request<{id: string}>, res: Response) => {
     try {
         const { 
             dataPasseio,
@@ -81,7 +81,7 @@ export const updatePasseio = async (req: Request<{id: number}>, res: Response) =
     }
 }
 
-export const deletePasseioById = async (req: Request<{id: number}>, res: Response) => {
+export const deletePasseioById = async (req: Request<{id: string}>, res: Response) => {
     try{
         const passeio = await PasseioModel.findByPk(req.params.id)
 

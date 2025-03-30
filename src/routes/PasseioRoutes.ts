@@ -1,12 +1,13 @@
 import express from "express"
 import { createPasseio, deletePasseioById, getPasseioById, getPasseios, updatePasseio } from "../controllers/PasseioController"
+import { authMiddleware } from "../middleware/authMiddleware"
 
 const router = express.Router()
 
-router.get("/passeios", getPasseios)
-router.get("/passeio/:id", getPasseioById)
-router.post("/cadastro-passeio", createPasseio)
-router.put("/passeio/:id", updatePasseio)
-router.delete("/passeio/:id", deletePasseioById)
+router.get("/passeios", authMiddleware, getPasseios)
+router.get("/passeio/:id", authMiddleware, getPasseioById)
+router.post("/cadastro-passeio", authMiddleware, createPasseio)
+router.put("/passeio/:id", authMiddleware, updatePasseio)
+router.delete("/passeio/:id", authMiddleware, deletePasseioById)
 
 export default router;

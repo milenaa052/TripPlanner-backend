@@ -6,7 +6,7 @@ export const getDespesas = async (req: Request, res: Response) => {
     return res.send(despesas)
 }
 
-export const getDespesasById = async (req: Request<{id: number}>, res: Response) => {
+export const getDespesasById = async (req: Request<{id: string}>, res: Response) => {
     const despesa = await DespesaModel.findByPk(req.params.id);
     return res.json(despesa)
 }
@@ -34,7 +34,7 @@ export const createDespesa = async (req: Request, res: Response) => {
     }
 }
 
-export const updateDespesa = async (req: Request<{id: number}>, res: Response) => {
+export const updateDespesa = async (req: Request<{id: string}>, res: Response) => {
     try {
         const { tipoDespesa, gasto, dataDespesa, viagemId } = req.body
 
@@ -63,7 +63,7 @@ export const updateDespesa = async (req: Request<{id: number}>, res: Response) =
     }
 }
 
-export const deleteDespesaById = async (req: Request<{id: number}>, res: Response) => {
+export const deleteDespesaById = async (req: Request<{id: string}>, res: Response) => {
     try {
         const despesa = await DespesaModel.findByPk(req.params.id)
 

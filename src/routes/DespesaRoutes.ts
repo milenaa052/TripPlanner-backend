@@ -1,12 +1,13 @@
 import express  from "express"
 import { createDespesa, deleteDespesaById, getDespesas, getDespesasById, updateDespesa } from "../controllers/DespesaController"
+import { authMiddleware } from "../middleware/authMiddleware"
 
 const router = express.Router()
 
-router.get("/despesas", getDespesas)
-router.get("/despesa/:id", getDespesasById)
-router.post("/cadastro-despesa", createDespesa)
-router.put("/despesa/:id", updateDespesa)
-router.delete("/despesa/:id", deleteDespesaById)
+router.get("/despesas", authMiddleware, getDespesas)
+router.get("/despesa/:id", authMiddleware, getDespesasById)
+router.post("/cadastro-despesa", authMiddleware, createDespesa)
+router.put("/despesa/:id", authMiddleware, updateDespesa)
+router.delete("/despesa/:id", authMiddleware, deleteDespesaById)
 
 export default router;
