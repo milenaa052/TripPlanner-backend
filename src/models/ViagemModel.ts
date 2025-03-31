@@ -1,5 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
+import UsuarioModel from "./UsuarioModel";
 
 class ViagemModel extends Model {
     idViagem: number | undefined
@@ -8,6 +9,7 @@ class ViagemModel extends Model {
     codigoPais: string | undefined
     dataInicial: Date | undefined
     dataFinal: Date | undefined
+    usuarioId: number | undefined
 }
 
 ViagemModel.init({
@@ -35,6 +37,10 @@ ViagemModel.init({
     dataFinal: {
         type: DataTypes.DATE,
         allowNull: false
+    },
+    usuarioId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
 },
 {
@@ -42,5 +48,15 @@ ViagemModel.init({
     modelName: "ViagemModel",
     tableName: "viagens"
 })
+
+ViagemModel.belongsTo(UsuarioModel, {
+    foreignKey: "usuarioId",
+    as: "usuarios"
+})
+
+UsuarioModel.hasMany(ViagemModel, {
+    foreignKey: "usuarioId",
+    as: "viagens"
+});
 
 export default ViagemModel;

@@ -1,4 +1,5 @@
 import express from "express"
+import axios from "axios"
 import sequelize from "./config/database"
 import UsuarioRoutes from "./routes/UsuarioRoutes"
 import ViagemRoutes from "./routes/ViagemRoutes"
@@ -22,6 +23,21 @@ app.use(cors({
 app.get("/", (req, res) => {
     res.send("Hello World!")
 })
+
+app.get('/api/cidades', async (req, res) => {
+    try {
+      const { cidade } = req.query;
+      const response = await axios.get(
+        `https://nominatim.openstreetmap.org/search?city=${cidade}&format=json`,
+        {
+          headers: { "User-Agent": "SeuApp/1.0 (milenasantosdeoliveira40@gmail.com.com)" }
+        }
+      );
+      res.json(response.data);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao buscar cidades" });
+    }
+});
 
 app.use(UsuarioRoutes);
 app.use(ViagemRoutes);
