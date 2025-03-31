@@ -2,7 +2,11 @@ import { Request, Response } from "express"
 import ViagemModel from "../models/ViagemModel"
 
 export const getViagens = async (req: Request, res: Response) => {
-    const viagens = await ViagemModel.findAll();
+    const viagens = await ViagemModel.findAll({
+        where: {
+            usuarioId: req.body.usuario.usuario.idUsuario
+        }
+    });
     return res.send(viagens);
 }
 
@@ -20,12 +24,17 @@ export const createViagem = async (req: Request, res: Response) => {
                 .json({error: "Todos os campos são obrigatórios"})
         }
 
+        if (!req.body.usuario.usuario.idUsuario) {
+            return res.status(401).json({ error: "Usuário não autenticado" });
+        }
+
         const viagem = await ViagemModel.create({ 
             localOrigem, 
             localDestino,
             codigoPais,
             dataInicial, 
-            dataFinal 
+            dataFinal,
+            usuarioId: req.body.usuario.usuario.idUsuario
         })
         
         return res.status(201).json(viagem)
@@ -43,11 +52,15 @@ export const updateViagem = async (req: Request<{id: string}>, res: Response) =>
                 .json({error: "Todos os campos são obrigatórios"})
         }
 
+        if (!req.body.usuario.usuario.idUsuario) {
+            return res.status(401).json({ error: "Usuário não autenticado" });
+        }
+
         const viagem = await ViagemModel.findByPk(req.params.id);
 
         if(!viagem) {
             return res.status(404)
-                .json({error: "Viagem nãoo encontrada"});
+                .json({error: "Viagem não encontrada"});
         }
 
         viagem.localOrigem = localOrigem;
@@ -55,6 +68,7 @@ export const updateViagem = async (req: Request<{id: string}>, res: Response) =>
         viagem.codigoPais = codigoPais;
         viagem.dataInicial = dataInicial;
         viagem.dataFinal = dataFinal;
+        viagem.usuarioId = req.body.usuario.usuario.idUsuario;
         
         await viagem.save();
 
