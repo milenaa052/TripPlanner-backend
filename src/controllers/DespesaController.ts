@@ -2,8 +2,23 @@ import { Request, Response } from "express"
 import DespesaModel from "../models/DespesaModel"
 
 export const getDespesas = async (req: Request, res: Response) => {
-    const despesas = await DespesaModel.findAll()
-    return res.send(despesas)
+    try {
+        const { viagemId } = req.query;
+
+        if (!viagemId) {
+            return res.status(400).json({ error: "viagemId é obrigatório" });
+        }
+
+        const despesas = await DespesaModel.findAll({
+            where: { viagemId: Number(viagemId) }
+        });
+
+        return res.status(201).json(despesas)
+
+    } catch (error) {
+        console.error("Erro:", error);
+        return res.status(500).json({ error: "Erro interno" });
+    }
 }
 
 export const getDespesasById = async (req: Request<{id: string}>, res: Response) => {
