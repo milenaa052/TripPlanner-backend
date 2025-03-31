@@ -2,8 +2,23 @@ import { Request, Response } from "express";
 import HospedagemModel from "../models/HospedagemModel";
 
 export const getHospedagens = async (req: Request, res: Response) => {
-    const hospedagens = await HospedagemModel.findAll()
-   return res.status(201).json(hospedagens)
+    try {
+        const { viagemId } = req.query;
+
+        if (!viagemId) {
+            return res.status(400).json({ error: "viagemId é obrigatório" });
+        }
+
+        const hospedagens = await HospedagemModel.findAll({
+            where: { viagemId: Number(viagemId) }
+        });
+        
+        return res.status(201).json(hospedagens)
+
+    } catch (error) {
+        console.error("Erro:", error);
+        return res.status(500).json({ error: "Erro interno" });
+    }
 }
 
 export const getHospedagemById = async (req: Request<{id: string}>, res: Response) => {
