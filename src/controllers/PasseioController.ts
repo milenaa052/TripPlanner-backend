@@ -13,17 +13,17 @@ export const getPasseios = async (req: Request, res: Response) => {
             where: { viagemId: Number(viagemId) }
         })
 
-        return res.status(201).json(passeios)
+        return res.status(200).json(passeios)
 
     } catch (error) {
         console.error("Erro:", error)
-        return res.status(500).json({ error: "Erro interno" })
+        return res.status(500).json({ error: "Erro interno no servidor" })
     }
 }
 
 export const getPasseioById = async (req: Request<{id: string}>, res: Response) => {
     const passeio = await PasseioModel.findByPk(req.params.id)
-    return res.status(201).json(passeio)
+    return res.status(200).json(passeio)
 }
 
 export const createPasseio = async (req: Request, res: Response) => {
@@ -77,7 +77,7 @@ export const updatePasseio = async (req: Request<{id: string}>, res: Response) =
         const passeio = await PasseioModel.findByPk(req.params.id)
 
         if(!passeio) {
-            return res.status(400)
+            return res.status(404)
                 .json({error: "Passeio não encontrado"})
         }
 
@@ -89,7 +89,7 @@ export const updatePasseio = async (req: Request<{id: string}>, res: Response) =
         passeio.viagemId = viagemId
 
         await passeio.save()
-        return res.status(201).json(passeio)
+        return res.status(200).json(passeio)
 
     } catch (error) {
         return res.status(500).json("Erro interno no servidor " + error)
@@ -101,11 +101,11 @@ export const deletePasseioById = async (req: Request<{id: string}>, res: Respons
         const passeio = await PasseioModel.findByPk(req.params.id)
 
         if(!passeio) {
-            return res.status(400)
+            return res.status(404)
                 .json({error: "Passeio não encontrado"})
         }
 
-        await passeio?.destroy()
+        await passeio.destroy()
         return res.status(204).send()
         
     } catch (error) {

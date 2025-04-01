@@ -20,7 +20,7 @@ export const loginUsuario = async (req: Request, res: Response) => {
     const senhaValidada = await usuario.validarSenha(senha)
 
     if(!senhaValidada) {
-        return res.status(400)
+        return res.status(401)
             .json({error: "Email ou senha inválidos"})
     }
 

@@ -13,17 +13,17 @@ export const getTransportes = async (req: Request, res: Response) => {
             where: { viagemId: Number(viagemId) }
         })
 
-        return res.status(201).json(transportes)
+        return res.status(200).json(transportes)
 
     } catch (error) {
         console.error("Erro:", error)
-        return res.status(500).json({ error: "Erro interno" })
+        return res.status(500).json({ error: "Erro interno no servidor" })
     }
 }
 
 export const getTransporteById = async (req: Request<{id: string}>, res: Response) => {
     const transporte = await TransporteModel.findByPk(req.params.id)
-    return res.status(201).json(transporte)
+    return res.status(200).json(transporte)
 }
 
 export const createTransporte = async (req: Request, res: Response) => {
@@ -77,7 +77,7 @@ export const updateTransporte = async (req: Request<{id: string}>, res: Response
         const transporte = await TransporteModel.findByPk(req.params.id)
 
         if(!transporte) {
-            return res.status(400)
+            return res.status(404)
                 .json({error: "Transporte não encontrado"})
         }
 
@@ -89,7 +89,7 @@ export const updateTransporte = async (req: Request<{id: string}>, res: Response
         transporte.viagemId = viagemId
 
         await transporte.save()
-        return res.status(201).json(transporte)
+        return res.status(200).json(transporte)
 
     } catch (error) {
         return res.status(500).json("Erro interno no servidor " + error)
@@ -101,15 +101,14 @@ export const deleteTransporteById = async (req: Request<{id: string}>, res: Resp
         const transporte = await TransporteModel.findByPk(req.params.id)
 
         if(!transporte) {
-            return res.status(400)
+            return res.status(404)
                 .json({error: "Transporte não encontrado"})
         }
 
-        await transporte?.destroy()
+        await transporte.destroy()
         return res.status(204).send()
         
     } catch (error) {
-        
         return res.status(500).json("Erro interno no servidor " + error)
     }
 }
