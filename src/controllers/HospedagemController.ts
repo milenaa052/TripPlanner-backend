@@ -13,7 +13,7 @@ export const getHospedagens = async (req: Request, res: Response) => {
             where: { viagemId: Number(viagemId) }
         })
         
-        return res.status(201).json(hospedagens)
+        return res.status(200).json(hospedagens)
 
     } catch (error) {
         console.error("Erro:" + error)
@@ -23,7 +23,7 @@ export const getHospedagens = async (req: Request, res: Response) => {
 
 export const getHospedagemById = async (req: Request<{id: string}>, res: Response) => {
     const hospedagem = await HospedagemModel.findByPk(req.params.id)
-    return res.status(201).json(hospedagem)
+    return res.status(200).json(hospedagem)
 }
 
 export const createHospedagem = async (req: Request, res: Response) => {
@@ -38,7 +38,7 @@ export const createHospedagem = async (req: Request, res: Response) => {
 
         if(!localHospedagem || !dataCheckin || !dataCheckout || !viagemId) {
             return res.status(400)
-                .json({error: "Todos os campos devem ser preenchidos"})
+                .json({error: "Todos os campos são obrigatórios"})
         }
 
         const hospedagem = await HospedagemModel.create({
@@ -74,7 +74,7 @@ export const updateHospedagem = async (req: Request<{id: string}>, res: Response
         const hospedagem = await HospedagemModel.findByPk(req.params.id)
 
         if(!hospedagem) {
-            return res.status(400)
+            return res.status(404)
                 .json({error: "Hospedagem não encontrada"})
         }
 
@@ -85,7 +85,7 @@ export const updateHospedagem = async (req: Request<{id: string}>, res: Response
         hospedagem.viagemId = viagemId
 
         await hospedagem.save()
-        return res.status(201).json(hospedagem)
+        return res.status(200).json(hospedagem)
 
     } catch (error) {
        return res.status(500).json("Erro interno no servidor " + error)
@@ -97,7 +97,7 @@ export const deleteHospedagemById = async (req: Request<{id: string}>, res: Resp
         const hospedagem = await HospedagemModel.findByPk(req.params.id)
 
         if(!hospedagem) {
-            res.status(400)
+            res.status(404)
                 .json({error: "Hospedagem não encontrada"})
         }
 

@@ -3,12 +3,12 @@ import UsuarioModel from "../models/UsuarioModel"
 
 export const getUsuarios = async (req: Request, res: Response) => {
     const usuarios = await UsuarioModel.findAll()
-    return res.send(usuarios)
+    return res.status(200).send(usuarios)
 }
 
 export const getUsuarioById = async (req: Request<{id: string}>, res: Response) => {
-    const usuarios = await UsuarioModel.findByPk(req.params.id)
-    return res.json(usuarios)
+    const usuario = await UsuarioModel.findByPk(req.params.id)
+    return res.status(200).json(usuario)
 }
 
 export const createUsuario = async (req: Request, res: Response) => {
@@ -28,6 +28,7 @@ export const createUsuario = async (req: Request, res: Response) => {
         })
 
         return res.status(201).json(usuario)
+
     } catch (error) {
         return res.status(500).json("Erro interno no servidor " + error)
     }
@@ -46,7 +47,7 @@ export const updateUsuario = async (req: Request<{id: string}>, res: Response) =
 
         if(!usuario) {
             return res.status(404)
-                .json({error: "Usuario não existe"})
+                .json({error: "Usuario não encontrado"})
         }
 
         usuario.nome = nome
@@ -56,7 +57,8 @@ export const updateUsuario = async (req: Request<{id: string}>, res: Response) =
         
         await usuario.save()
 
-        return res.status(201).json(usuario)
+        return res.status(200).json(usuario)
+
     } catch (error) {
         return res.status(500).json("Erro interno no suariovidor " + error)
     }
@@ -68,12 +70,12 @@ export const deleteUsuarioById = async (req: Request<{ id: string}>, res: Respon
         
         if(!usuario) {
             return res.status(404)
-                .json({error: "Usuario não existe"})
+                .json({error: "Usuario não encontrado"})
         }
 
         await usuario.destroy()
-
         return res.status(204).send()
+
     } catch (error) {
         return res.status(500).json("Erro interno no suariovidor " + error)
     }

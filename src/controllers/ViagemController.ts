@@ -9,12 +9,12 @@ export const getViagens = async (req: Request, res: Response) => {
             usuarioId: idUsuario
         }
     })
-    return res.send(viagens)
+    return res.status(200).send(viagens)
 }
 
 export const getViagemById = async (req: Request<{id: string}>, res: Response) => {
     const viagens = await ViagemModel.findByPk(req.params.id)
-    return res.json(viagens)
+    return res.status(200).json(viagens)
 }
 
 export const createViagem = async (req: Request, res: Response) => {
@@ -41,6 +41,7 @@ export const createViagem = async (req: Request, res: Response) => {
         })
         
         return res.status(201).json(viagem)
+
     } catch (error) {
         return res.status(500).json("Erro interno no servidor " + error)
     }
@@ -54,6 +55,7 @@ export const updateViagem = async (req: Request<{id: string}>, res: Response) =>
             return res.status(400)
                 .json({error: "Todos os campos são obrigatórios"})
         }
+
         const idUsuario = req.body.usuario.usuario.idUsuario
         if (!idUsuario) {
             return res.status(401).json({ error: "Usuário não autenticado" })
@@ -74,8 +76,8 @@ export const updateViagem = async (req: Request<{id: string}>, res: Response) =>
         viagem.usuarioId = idUsuario
         
         await viagem.save()
+        return res.status(200).json(viagem)
 
-        return res.status(201).json(viagem)
     } catch (error) {
         return res.status(500).json("Erro interno no servidor " + error)
     }
@@ -91,8 +93,8 @@ export const deleteViagemById = async (req: Request<{ id: string }>, res: Respon
         }
 
         await viagem.destroy()
-
         return res.status(204).send()
+
     } catch (error) {
         return res.status(500).json("Erro interno no servidor " + error)
     }
