@@ -1,5 +1,5 @@
-import { NextFunction, Request, Response } from "express";
-import { verificaToken } from "../utils/jwt";
+import { NextFunction, Request, Response } from "express"
+import { verificaToken } from "../utils/jwt"
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const token = req.header("Authorization")?.replace("Bearer ", "")

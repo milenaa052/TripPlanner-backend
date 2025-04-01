@@ -3,26 +3,26 @@ import DespesaModel from "../models/DespesaModel"
 
 export const getDespesas = async (req: Request, res: Response) => {
     try {
-        const { viagemId } = req.query;
+        const { viagemId } = req.query
 
         if (!viagemId) {
-            return res.status(400).json({ error: "viagemId é obrigatório" });
+            return res.status(400).json({ error: "viagemId é obrigatório" })
         }
 
         const despesas = await DespesaModel.findAll({
             where: { viagemId: Number(viagemId) }
-        });
+        })
 
         return res.status(201).json(despesas)
 
     } catch (error) {
-        console.error("Erro:", error);
-        return res.status(500).json({ error: "Erro interno" });
+        console.error("Erro:" + error)
+        return res.status(500).json({ error: "Erro interno" })
     }
 }
 
 export const getDespesasById = async (req: Request<{id: string}>, res: Response) => {
-    const despesa = await DespesaModel.findByPk(req.params.id);
+    const despesa = await DespesaModel.findByPk(req.params.id)
     return res.json(despesa)
 }
 
@@ -87,7 +87,7 @@ export const deleteDespesaById = async (req: Request<{id: string}>, res: Respons
                 .json({error: "Despesa não encontrada"})
         }
 
-        await despesa?.destroy()
+        await despesa.destroy()
         
        return res.status(204).send()
     } catch (error) {

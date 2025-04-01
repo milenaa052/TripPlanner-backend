@@ -7,13 +7,13 @@ export const getUsuarios = async (req: Request, res: Response) => {
 }
 
 export const getUsuarioById = async (req: Request<{id: string}>, res: Response) => {
-    const usuarios = await UsuarioModel.findByPk(req.params.id);
-    return res.json(usuarios);
+    const usuarios = await UsuarioModel.findByPk(req.params.id)
+    return res.json(usuarios)
 }
 
 export const createUsuario = async (req: Request, res: Response) => {
     try {
-        const { nome, cpf, email, senha } = req.body;
+        const { nome, cpf, email, senha } = req.body
 
         if(!nome || !cpf || !email || !senha) {
             return res.status(400)
@@ -35,28 +35,28 @@ export const createUsuario = async (req: Request, res: Response) => {
 
 export const updateUsuario = async (req: Request<{id: string}>, res: Response) => {
     try {
-        const { nome, cpf, email, senha } = req.body;
+        const { nome, cpf, email, senha } = req.body
 
         if(!nome || !cpf || !email || !senha) {
             return res.status(400)
                 .json({error: "Todos os campos são obrigatórios"})
         }
 
-        const usuario = await UsuarioModel.findByPk(req.params.id);
+        const usuario = await UsuarioModel.findByPk(req.params.id)
 
         if(!usuario) {
             return res.status(404)
-                .json({error: "Usuario não existe"});
+                .json({error: "Usuario não existe"})
         }
 
-        usuario.nome = nome;
-        usuario.cpf = cpf;
-        usuario.email = email;
-        usuario.senha = senha;
+        usuario.nome = nome
+        usuario.cpf = cpf
+        usuario.email = email
+        usuario.senha = senha
         
-        await usuario.save();
+        await usuario.save()
 
-        return res.status(201).json(usuario);
+        return res.status(201).json(usuario)
     } catch (error) {
         return res.status(500).json("Erro interno no suariovidor " + error)
     }

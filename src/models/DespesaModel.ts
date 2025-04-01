@@ -1,9 +1,9 @@
-import { DataTypes, Model } from "sequelize";
-import sequelize from "../config/database";
-import ViagemModel from "./ViagemModel";
-import HospedagemModel from "./HospedagemModel";
-import TransporteModel from "./TransporteModel";
-import PasseioModel from "./PasseioModel";
+import { DataTypes, Model } from "sequelize"
+import sequelize from "../config/database"
+import ViagemModel from "./ViagemModel"
+import HospedagemModel from "./HospedagemModel"
+import TransporteModel from "./TransporteModel"
+import PasseioModel from "./PasseioModel"
 
 class DespesaModel extends Model {
     idDespesa: number | undefined
@@ -100,4 +100,4 @@ PasseioModel.hasOne(DespesaModel, {
     as: "despesas"
 })
 
-export default DespesaModel;
+export default DespesaModel

@@ -1,7 +1,7 @@
-import { DataTypes, Model } from "sequelize";
-import sequelize from "../config/database";
-import ViagemModel from "./ViagemModel";
-import DespesaModel from "./DespesaModel";
+import { DataTypes, Model } from "sequelize"
+import sequelize from "../config/database"
+import ViagemModel from "./ViagemModel"
+import DespesaModel from "./DespesaModel"
 
 class TransporteModel extends Model {
     idTransporte: number | undefined
@@ -76,7 +76,7 @@ TransporteModel.init({
                 where: {
                     transporteId: transporte.idTransporte
                 }
-            });
+            })
         }
     }
 })
@@ -91,4 +91,4 @@ ViagemModel.hasMany(TransporteModel, {
     as: "transportes"
 })
 
-export default TransporteModel;
+export default TransporteModel
