@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import UsuarioModel from "../models/UsuarioModel";
+import { Request, Response } from "express"
 import {gerarToken } from "../utils/jwt"
+import UsuarioModel from "../models/UsuarioModel"
 
 export const loginUsuario = async (req: Request, res: Response) => {
     const { email, senha } = req.body
@@ -11,12 +11,13 @@ export const loginUsuario = async (req: Request, res: Response) => {
     }
 
     const usuario = await UsuarioModel.findOne({ where: { email } })
+
     if(!usuario) {
         return res.status(404)
             .json({error: "Usuário não encontrado"})
     }
 
-    const senhaValidada = await usuario.validarSenha(senha);
+    const senhaValidada = await usuario.validarSenha(senha)
 
     if(!senhaValidada) {
         return res.status(400)

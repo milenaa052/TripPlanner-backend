@@ -1,6 +1,6 @@
-import { DataTypes, Model } from "sequelize";
-import sequelize from "../config/database";
-import UsuarioModel from "./UsuarioModel";
+import { DataTypes, Model } from "sequelize"
+import sequelize from "../config/database"
+import UsuarioModel from "./UsuarioModel"
 
 class ViagemModel extends Model {
     idViagem: number | undefined
@@ -57,6 +57,6 @@ ViagemModel.belongsTo(UsuarioModel, {
 UsuarioModel.hasMany(ViagemModel, {
     foreignKey: "usuarioId",
     as: "viagens"
-});
+})
 
-export default ViagemModel;
+export default ViagemModel

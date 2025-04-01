@@ -2,30 +2,33 @@ import { Request, Response } from "express"
 import ViagemModel from "../models/ViagemModel"
 
 export const getViagens = async (req: Request, res: Response) => {
+    const idUsuario = req.body.usuario.usuario.idUsuario
+
     const viagens = await ViagemModel.findAll({
         where: {
-            usuarioId: req.body.usuario.usuario.idUsuario
+            usuarioId: idUsuario
         }
-    });
-    return res.send(viagens);
+    })
+    return res.send(viagens)
 }
 
 export const getViagemById = async (req: Request<{id: string}>, res: Response) => {
-    const viagens = await ViagemModel.findByPk(req.params.id);
-    return res.json(viagens);
+    const viagens = await ViagemModel.findByPk(req.params.id)
+    return res.json(viagens)
 }
 
 export const createViagem = async (req: Request, res: Response) => {
     try {
-        const { localOrigem, localDestino, codigoPais, dataInicial, dataFinal } = req.body;
+        const { localOrigem, localDestino, codigoPais, dataInicial, dataFinal } = req.body
 
         if(!localOrigem || !localDestino || !codigoPais || !dataInicial || !dataFinal) {
             return res.status(400)
                 .json({error: "Todos os campos são obrigatórios"})
         }
 
-        if (!req.body.usuario.usuario.idUsuario) {
-            return res.status(401).json({ error: "Usuário não autenticado" });
+        const idUsuario = req.body.usuario.usuario.idUsuario
+        if (!idUsuario) {
+            return res.status(401).json({ error: "Usuário não autenticado" })
         }
 
         const viagem = await ViagemModel.create({ 
@@ -34,7 +37,7 @@ export const createViagem = async (req: Request, res: Response) => {
             codigoPais,
             dataInicial, 
             dataFinal,
-            usuarioId: req.body.usuario.usuario.idUsuario
+            usuarioId: idUsuario
         })
         
         return res.status(201).json(viagem)
@@ -45,34 +48,34 @@ export const createViagem = async (req: Request, res: Response) => {
 
 export const updateViagem = async (req: Request<{id: string}>, res: Response) => {
     try {
-        const { localOrigem, localDestino, codigoPais, dataInicial, dataFinal } = req.body;
+        const { localOrigem, localDestino, codigoPais, dataInicial, dataFinal } = req.body
 
         if(!localOrigem || !localDestino || !codigoPais || !dataInicial || !dataFinal) {
             return res.status(400)
                 .json({error: "Todos os campos são obrigatórios"})
         }
-
-        if (!req.body.usuario.usuario.idUsuario) {
-            return res.status(401).json({ error: "Usuário não autenticado" });
+        const idUsuario = req.body.usuario.usuario.idUsuario
+        if (!idUsuario) {
+            return res.status(401).json({ error: "Usuário não autenticado" })
         }
 
-        const viagem = await ViagemModel.findByPk(req.params.id);
+        const viagem = await ViagemModel.findByPk(req.params.id)
 
         if(!viagem) {
             return res.status(404)
-                .json({error: "Viagem não encontrada"});
+                .json({error: "Viagem não encontrada"})
         }
 
-        viagem.localOrigem = localOrigem;
-        viagem.localDestino = localDestino;
-        viagem.codigoPais = codigoPais;
-        viagem.dataInicial = dataInicial;
-        viagem.dataFinal = dataFinal;
-        viagem.usuarioId = req.body.usuario.usuario.idUsuario;
+        viagem.localOrigem = localOrigem
+        viagem.localDestino = localDestino
+        viagem.codigoPais = codigoPais
+        viagem.dataInicial = dataInicial
+        viagem.dataFinal = dataFinal
+        viagem.usuarioId = idUsuario
         
-        await viagem.save();
+        await viagem.save()
 
-        return res.status(201).json(viagem);
+        return res.status(201).json(viagem)
     } catch (error) {
         return res.status(500).json("Erro interno no servidor " + error)
     }

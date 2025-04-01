@@ -10,4 +10,4 @@ router.post("/cadastro-passeio", authMiddleware, createPasseio)
 router.put("/passeio/:id", authMiddleware, updatePasseio)
 router.delete("/passeio/:id", authMiddleware, deletePasseioById)
 
-export default router;
+export default router

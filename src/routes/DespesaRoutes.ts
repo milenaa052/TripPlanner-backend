@@ -10,4 +10,4 @@ router.post("/cadastro-despesa", authMiddleware, createDespesa)
 router.put("/despesa/:id", authMiddleware, updateDespesa)
 router.delete("/despesa/:id", authMiddleware, deleteDespesaById)
 
-export default router;
+export default router

@@ -1,8 +1,7 @@
-import { DataTypes, FLOAT, Model } from "sequelize";
-import sequelize from "../config/database";
-import ViagemModel from "./ViagemModel";
-import DespesaModel from "./DespesaModel";
-import { NUMBER } from "sequelize";
+import { DataTypes, Model } from "sequelize"
+import sequelize from "../config/database"
+import ViagemModel from "./ViagemModel"
+import DespesaModel from "./DespesaModel"
 
 class HospedagemModel extends Model {
     idHospedagem: number | undefined
@@ -72,7 +71,7 @@ HospedagemModel.init({
                 where: {
                     hospedagemId: hospedagem.idHospedagem
                 }
-            });
+            })
         }
     }
 })
@@ -85,6 +84,6 @@ HospedagemModel.belongsTo(ViagemModel, {
 ViagemModel.hasMany(HospedagemModel, {
     foreignKey: "viagemId",
     as: "hospedagens"
-});
+})
 
-export default HospedagemModel;
+export default HospedagemModel

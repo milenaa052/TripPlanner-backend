@@ -1,6 +1,6 @@
-import { DataTypes, Model } from "sequelize";
-import sequelize from "../config/database";
-import bcrypt from 'bcrypt';
+import { DataTypes, Model } from "sequelize"
+import bcrypt from 'bcrypt'
+import sequelize from "../config/database"
 
 class UsuarioModel extends Model {
     idUsuario: number | undefined
@@ -49,12 +49,12 @@ UsuarioModel.init({
 
 UsuarioModel.beforeCreate(async (usuario: UsuarioModel) => {
     await usuario.hashSenha()
-});
+})
 
 UsuarioModel.beforeUpdate(async (usuario: UsuarioModel) => {
     if(usuario.changed('senha')) {
         await usuario.hashSenha()
     }
-});
+})
 
 export default UsuarioModel
