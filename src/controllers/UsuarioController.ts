@@ -56,6 +56,11 @@ export const updateUsuario = async (req: Request<{id: string}>, res: Response) =
                 .json({error: "Usuario não encontrado"})
         }
 
+        if (!cpf.isValid(cpfUsuario)) {
+            return res.status(400)
+                .json({error: "CPF inválido ou não existe"})
+        }
+
         usuario.nome = nome
         usuario.cpfUsuario = cpfUsuario
         usuario.email = email
