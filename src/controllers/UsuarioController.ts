@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import { cpf } from "cpf-cnpj-validator"
+import bcrypt from "bcrypt"
 import UsuarioModel from "../models/UsuarioModel"
 
 export const getUsuarios = async (req: Request, res: Response) => {
@@ -26,6 +27,12 @@ export const createUsuario = async (req: Request, res: Response) => {
                 .json({error: "CPF inválido ou não existe"})
         }
 
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+        if (!emailRegex.test(email)) {
+            return res.status(400)
+                .json({ error: "Formato de e-mail inválido" })
+        }
+
         const usuario = await UsuarioModel.create({ 
             nome, 
             cpfUsuario, 
@@ -42,9 +49,9 @@ export const createUsuario = async (req: Request, res: Response) => {
 
 export const updateUsuario = async (req: Request<{id: string}>, res: Response) => {
     try {
-        const { nome, cpfUsuario, email, senha } = req.body
+        const { nome, cpfUsuario, senha } = req.body
 
-        if(!nome || !cpfUsuario || !email || !senha) {
+        if(!nome || !cpfUsuario || !senha) {
             return res.status(400)
                 .json({error: "Todos os campos são obrigatórios"})
         }
@@ -63,7 +70,6 @@ export const updateUsuario = async (req: Request<{id: string}>, res: Response) =
 
         usuario.nome = nome
         usuario.cpfUsuario = cpfUsuario
-        usuario.email = email
         usuario.senha = senha
         
         await usuario.save()
