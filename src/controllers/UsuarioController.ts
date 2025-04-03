@@ -1,4 +1,5 @@
 import { Request, Response } from "express"
+import { cpf } from "cpf-cnpj-validator"
 import UsuarioModel from "../models/UsuarioModel"
 
 export const getUsuarios = async (req: Request, res: Response) => {
@@ -13,16 +14,21 @@ export const getUsuarioById = async (req: Request<{id: string}>, res: Response) 
 
 export const createUsuario = async (req: Request, res: Response) => {
     try {
-        const { nome, cpf, email, senha } = req.body
+        const { nome, cpfUsuario, email, senha } = req.body
 
-        if(!nome || !cpf || !email || !senha) {
+        if(!nome || !cpfUsuario || !email || !senha) {
             return res.status(400)
                 .json({error: "Todos os campos são obrigatórios"})
         }
 
+        if (!cpf.isValid(cpfUsuario)) {
+            return res.status(400)
+                .json({error: "CPF inválido ou não existe"})
+        }
+
         const usuario = await UsuarioModel.create({ 
             nome, 
-            cpf, 
+            cpfUsuario, 
             email, 
             senha 
         })
@@ -36,9 +42,9 @@ export const createUsuario = async (req: Request, res: Response) => {
 
 export const updateUsuario = async (req: Request<{id: string}>, res: Response) => {
     try {
-        const { nome, cpf, email, senha } = req.body
+        const { nome, cpfUsuario, email, senha } = req.body
 
-        if(!nome || !cpf || !email || !senha) {
+        if(!nome || !cpfUsuario || !email || !senha) {
             return res.status(400)
                 .json({error: "Todos os campos são obrigatórios"})
         }
@@ -50,8 +56,13 @@ export const updateUsuario = async (req: Request<{id: string}>, res: Response) =
                 .json({error: "Usuario não encontrado"})
         }
 
+        if (!cpf.isValid(cpfUsuario)) {
+            return res.status(400)
+                .json({error: "CPF inválido ou não existe"})
+        }
+
         usuario.nome = nome
-        usuario.cpf = cpf
+        usuario.cpfUsuario = cpfUsuario
         usuario.email = email
         usuario.senha = senha
         

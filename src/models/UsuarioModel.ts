@@ -5,7 +5,7 @@ import sequelize from "../config/database"
 class UsuarioModel extends Model {
     idUsuario: number | undefined
     nome: string | undefined
-    cpf: string | undefined
+    cpfUsuario: string | undefined
     email: string | undefined
     senha: string | undefined
 
@@ -28,7 +28,7 @@ UsuarioModel.init({
         type: DataTypes.STRING,
         allowNull: false
     },
-    cpf: {
+    cpfUsuario: {
         type: DataTypes.STRING,
         allowNull: false
     },
