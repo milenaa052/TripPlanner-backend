@@ -16,6 +16,24 @@ class UsuarioModel extends Model {
     public async validarSenha(senha: string) : Promise<boolean> {
         return await bcrypt.compare(senha, this.senha!)
     }
+
+    public static validarNivelSenha(senha: string) {
+        const requisitos = {
+            temMaiuscula: /[A-Z]/.test(senha),
+            temMinuscula: /[a-z]/.test(senha),
+            temNumero: /[0-9]/.test(senha),
+            temEspecial: /[!@#$%&*°?]/.test(senha),
+            tamanhoMinimo: senha.length >= 8
+        }
+          
+        const valida = Object.values(requisitos).every(Boolean)
+            
+        return {
+            valida,
+            requisitos,
+            mensagem: valida ? 'Senha válida' : 'Senha não atende aos requisitos mínimos'
+        }
+    }
 }
 
 UsuarioModel.init({
