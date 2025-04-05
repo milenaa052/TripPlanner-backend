@@ -56,6 +56,14 @@ export const createUsuario = async (req: Request, res: Response) => {
 
 export const updateUsuario = async (req: Request<{id: string}>, res: Response) => {
     try {
+        const usuarioLogado = req.body.usuario.usuario.idUsuario
+        const idUsuarioAtualizar = Number(req.params.id)
+
+        if(usuarioLogado !== idUsuarioAtualizar) {
+            return res.status(403)
+                .json({error: "Você não tem permissão para editar este usuário"})
+        }
+
         const { nome, cpfUsuario, senha } = req.body
 
         if(!nome || !cpfUsuario || !senha) {
