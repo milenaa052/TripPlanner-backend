@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import DespesaModel from "../models/DespesaModel"
 
-export const getDespesas = async (req: Request, res: Response) => {
+export const getDespesasByViagem = async (req: Request, res: Response) => {
     try {
         const { viagemId } = req.query
 
