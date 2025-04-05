@@ -15,7 +15,7 @@ export const getUsuarioById = async (req: Request<{id: string}>, res: Response) 
 export const createUsuario = async (req: Request, res: Response) => {
     try {
         const { nome, cpfUsuario, email, senha } = req.body
-
+    
         if(!nome || !cpfUsuario || !email || !senha) {
             return res.status(400)
                 .json({error: "Todos os campos são obrigatórios"})
