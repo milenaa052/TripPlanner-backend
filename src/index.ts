@@ -55,6 +55,8 @@ sequelize
     console.log("Erro " + error)
   })
 
-app.listen(porta, () => {
-    console.log("Servidor rodando na porta " + porta)
-})
+  const server = app.listen(porta, () => {
+    console.log("Servidor rodando na porta " + porta);
+  })
+
+export { app, server }

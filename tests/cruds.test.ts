@@ -1,15 +1,11 @@
 import { Request, Response } from "express"
+import request from "supertest"
 import { updateDespesa, deleteDespesaById } from "../src/controllers/DespesaController"
 import DespesaModel from "../src/models/DespesaModel"
+import { app, server } from "../src/index"
+import sequelize from "../src/config/database"
 
-// Mock dos módulos
 jest.mock("../src/models/DespesaModel")
-jest.mock("../src/middleware/authMiddleware", () => ({
-    authMiddleware: jest.fn((req, res, next) => {
-        req.user = { id: 1 } // Mock de usuário autenticado
-        next()
-    })
-}))
 
 describe("Testes das rotas de despesas", () => {
     let req: Partial<Request>
@@ -29,6 +25,13 @@ describe("Testes das rotas de despesas", () => {
             send: jest.fn()
         }
         next = jest.fn()
+
+        jest.clearAllMocks()
+    })
+
+    afterAll(async () => {
+        await sequelize.close()
+        server.close()
     })
 
     describe("Testes de validação", () => {
@@ -56,6 +59,69 @@ describe("Testes das rotas de despesas", () => {
             
             expect(res.status).toHaveBeenCalledWith(404)
             expect(res.json).toHaveBeenCalledWith({ error: "Despesa não encontrada" })
+        })
+    })
+
+    describe("Testes de autenticação nas rotas", () => {
+        // Mock para simular middleware de autenticação não autenticado
+        const unauthenticatedAuthMiddleware = jest.fn((req, res, next) => {
+            next()
+        })
+
+        test("GET /despesas deve exigir autenticação", async () => {
+            jest.mock("../src/middleware/authMiddleware", () => ({
+                authMiddleware: unauthenticatedAuthMiddleware
+            }))
+
+            const response = await request(app).get("/despesas")
+            expect(response.status).toBe(401)
+            expect(response.body.error).toBe("Acesso não autorizado")
+        })
+
+        test("GET /despesa/:id deve exigir autenticação", async () => {
+            jest.mock("../src/middleware/authMiddleware", () => ({
+                authMiddleware: unauthenticatedAuthMiddleware
+            }))
+
+            const response = await request(app).get("/despesa/1")
+            expect(response.status).toBe(401)
+            expect(response.body.error).toBe("Acesso não autorizado")
+        })
+
+        test("POST /cadastro-despesa deve exigir autenticação", async () => {
+            jest.mock("../src/middleware/authMiddleware", () => ({
+                authMiddleware: unauthenticatedAuthMiddleware
+            }))
+
+            const response = await request(app)
+                .post("/cadastro-despesa")
+                .send({ tipoDespesa: "Transporte", gasto: 100 })
+            
+            expect(response.status).toBe(401)
+            expect(response.body.error).toBe("Acesso não autorizado")
+        })
+
+        test("PUT /despesa/:id deve exigir autenticação", async () => {
+            jest.mock("../src/middleware/authMiddleware", () => ({
+                authMiddleware: unauthenticatedAuthMiddleware
+            }))
+
+            const response = await request(app)
+                .put("/despesa/1")
+                .send({ tipoDespesa: "Transporte", gasto: 150 })
+            
+            expect(response.status).toBe(401)
+            expect(response.body.error).toBe("Acesso não autorizado")
+        })
+
+        test("DELETE /despesa/:id deve exigir autenticação", async () => {
+            jest.mock("../src/middleware/authMiddleware", () => ({
+                authMiddleware: unauthenticatedAuthMiddleware
+            }))
+
+            const response = await request(app).delete("/despesa/1")
+            expect(response.status).toBe(401)
+            expect(response.body.error).toBe("Acesso não autorizado")
         })
     })
 })
