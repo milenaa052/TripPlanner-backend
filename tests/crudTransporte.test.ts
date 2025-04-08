@@ -1,11 +1,11 @@
 import { Request, Response } from "express"
 import request from "supertest"
-import { updateHospedagem, deleteHospedagemById } from "../src/controllers/HospedagemController"
-import HospedagemModel from "../src/models/HospedagemModel"
+import { updateTransporte, deleteTransporteById } from "../src/controllers/TransporteController"
+import TransporteModel from "../src/models/TransporteModel"
 import app from "../src/app"
 import sequelize from "../src/config/database"
 
-describe("Testes das rotas de hospedagens", () => {
+describe("Testes das rotas de transportes", () => {
     let req: Partial<Request>
     let res: Partial<Response>
     let next: jest.Mock
@@ -32,31 +32,32 @@ describe("Testes das rotas de hospedagens", () => {
     })
 
     describe("Testes de validação", () => {
-        test("Erro 404 ao atualizar hospedagem inexistente", async () => {
+        test("Erro 404 ao atualizar transporte inexistente", async () => {
             req.params = { id: "999" }
             req.body = { 
-                localHospedagem: "Hotel A",
-                dataCheckin: "2023-01-01",
-                dataCheckout: "2023-01-10",
-                gastoTotal: 800,
+                tipoTransporte: "Carro",
+                origemTransporte: "Hotel A",
+                destinoTransporte: "Coliseu",
+                gastoTransporte: 20,
+                dataTransporte: "2023-01-01",
                 viagemId: 1
             };
 
-            jest.spyOn(HospedagemModel, "findByPk").mockResolvedValue(null)
+            jest.spyOn(TransporteModel, "findByPk").mockResolvedValue(null)
             
-            await updateHospedagem(req as Request<{ id: string }>, res as Response)
+            await updateTransporte(req as Request<{ id: string }>, res as Response)
             
             expect(res.status).toHaveBeenCalledWith(404)
-            expect(res.json).toHaveBeenCalledWith({ error: "Hospedagem não encontrada" })
+            expect(res.json).toHaveBeenCalledWith({ error: "Transporte não encontrado" })
         })
 
-        test("Erro 404 ao deletar hospedagem inexistente", async () => {
-            jest.spyOn(HospedagemModel, "findByPk").mockResolvedValue(null)
+        test("Erro 404 ao deletar transporte inexistente", async () => {
+            jest.spyOn(TransporteModel, "findByPk").mockResolvedValue(null)
             
-            await deleteHospedagemById(req as Request<{ id: string }>, res as Response)
+            await deleteTransporteById(req as Request<{ id: string }>, res as Response)
             
             expect(res.status).toHaveBeenCalledWith(404)
-            expect(res.json).toHaveBeenCalledWith({ error: "Hospedagem não encontrada" })
+            expect(res.json).toHaveBeenCalledWith({ error: "Transporte não encontrado" })
         })
     })
 
@@ -66,57 +67,39 @@ describe("Testes das rotas de hospedagens", () => {
             next()
         })
 
-        test("GET /hospedagens deve exigir autenticação", async () => {
+        test("GET /transportes deve exigir autenticação", async () => {
             jest.mock("../src/middleware/authMiddleware", () => ({
                 authMiddleware: unauthenticatedAuthMiddleware
             }))
 
-            const response = await request(app).get("/hospedagens")
+            const response = await request(app).get("/transportes")
             expect(response.status).toBe(401)
             expect(response.body.error).toBe("Acesso não autorizado")
         })
 
-        test("GET /hospedagem/:id deve exigir autenticação", async () => {
+        test("GET /transporte/:id deve exigir autenticação", async () => {
             jest.mock("../src/middleware/authMiddleware", () => ({
                 authMiddleware: unauthenticatedAuthMiddleware
             }))
 
-            const response = await request(app).get("/hospedagem/1")
+            const response = await request(app).get("/transporte/1")
             expect(response.status).toBe(401)
             expect(response.body.error).toBe("Acesso não autorizado")
         })
 
-        test("POST /cadastro-hospedagem deve exigir autenticação", async () => {
+        test("POST /cadastro-transporte deve exigir autenticação", async () => {
             jest.mock("../src/middleware/authMiddleware", () => ({
                 authMiddleware: unauthenticatedAuthMiddleware
             }))
 
             const response = await request(app)
-                .post("/cadastro-hospedagem")
+                .post("/cadastro-transporte")
                 .send({ 
-                    localHospedagem: "Hotel A",
-                    dataCheckin: "2023-01-01",
-                    dataCheckout: "2023-01-10",
-                    gastoTotal: 800,
-                    viagemId: 1  
-                })
-            
-            expect(response.status).toBe(401)
-            expect(response.body.error).toBe("Acesso não autorizado")
-        })
-
-        test("PUT /hospedagem/:id deve exigir autenticação", async () => {
-            jest.mock("../src/middleware/authMiddleware", () => ({
-                authMiddleware: unauthenticatedAuthMiddleware
-            }))
-
-            const response = await request(app)
-                .put("/hospedagem/1")
-                .send({ 
-                    localHospedagem: "Hotel A",
-                    dataCheckin: "2023-01-01",
-                    dataCheckout: "2023-01-10",
-                    gastoTotal: 800,
+                    tipoTransporte: "Carro",
+                    origemTransporte: "Hotel A",
+                    destinoTransporte: "Coliseu",
+                    gastoTransporte: 20,
+                    dataTransporte: "2023-01-01",
                     viagemId: 1
                 })
             
@@ -124,12 +107,32 @@ describe("Testes das rotas de hospedagens", () => {
             expect(response.body.error).toBe("Acesso não autorizado")
         })
 
-        test("DELETE /hospedagem/:id deve exigir autenticação", async () => {
+        test("PUT /transporte/:id deve exigir autenticação", async () => {
             jest.mock("../src/middleware/authMiddleware", () => ({
                 authMiddleware: unauthenticatedAuthMiddleware
             }))
 
-            const response = await request(app).delete("/hospedagem/1")
+            const response = await request(app)
+                .put("/transporte/1")
+                .send({ 
+                    tipoTransporte: "Carro",
+                    origemTransporte: "Hotel A",
+                    destinoTransporte: "Coliseu",
+                    gastoTransporte: 20,
+                    dataTransporte: "2023-01-01",
+                    viagemId: 1
+                })
+            
+            expect(response.status).toBe(401)
+            expect(response.body.error).toBe("Acesso não autorizado")
+        })
+
+        test("DELETE /transporte/:id deve exigir autenticação", async () => {
+            jest.mock("../src/middleware/authMiddleware", () => ({
+                authMiddleware: unauthenticatedAuthMiddleware
+            }))
+
+            const response = await request(app).delete("/transporte/1")
             expect(response.status).toBe(401)
             expect(response.body.error).toBe("Acesso não autorizado")
         })
