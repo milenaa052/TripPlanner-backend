@@ -107,7 +107,7 @@ describe("Testes das rotas de passeios", () => {
             expect(response.body.error).toBe("Acesso não autorizado")
         })
 
-        test("PUT /transporte/:id deve exigir autenticação", async () => {
+        test("PUT /passeio/:id deve exigir autenticação", async () => {
             jest.mock("../src/middleware/authMiddleware", () => ({
                 authMiddleware: unauthenticatedAuthMiddleware
             }))
