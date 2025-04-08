@@ -76,14 +76,4 @@ HospedagemModel.init({
     }
 })
 
-HospedagemModel.belongsTo(ViagemModel, {
-    foreignKey: "viagemId",
-    as: "viagens"
-})
-
-ViagemModel.hasMany(HospedagemModel, {
-    foreignKey: "viagemId",
-    as: "hospedagens"
-})
-
 export default HospedagemModel

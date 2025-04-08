@@ -60,44 +60,4 @@ DespesaModel.init({
     tableName: "despesas" 
 })
 
-DespesaModel.belongsTo(ViagemModel, {
-    foreignKey: "viagemId",
-    as: "viagens"
-})
-
-ViagemModel.hasMany(DespesaModel, {
-    foreignKey: "viagemId",
-    as: "despesas"
-})
-
-DespesaModel.belongsTo(HospedagemModel, {
-    foreignKey: "hospedagemId",
-    as: "hospedagens"
-})
-
-HospedagemModel.hasOne(DespesaModel, {
-    foreignKey: "hospedagemId",
-    as: "despesas"
-})
-
-DespesaModel.belongsTo(TransporteModel, {
-    foreignKey: "transporteId",
-    as: "transportes"
-})
-
-TransporteModel.hasOne(DespesaModel, {
-    foreignKey: "transporteId",
-    as: "despesas"
-})
-
-DespesaModel.belongsTo(PasseioModel, {
-    foreignKey: "passeioId",
-    as: "passeios"
-})
-
-PasseioModel.hasOne(DespesaModel, {
-    foreignKey: "passeioId",
-    as: "despesas"
-})
-
 export default DespesaModel
