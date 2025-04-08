@@ -1,11 +1,11 @@
 import { Request, Response } from "express"
 import request from "supertest"
-import { updateDespesa, deleteDespesaById } from "../src/controllers/DespesaController"
-import DespesaModel from "../src/models/DespesaModel"
+import { updateHospedagem, deleteHospedagemById } from "../src/controllers/HospedagemController"
+import HospedagemModel from "../src/models/HospedagemModel"
 import app from "../src/app"
 import sequelize from "../src/config/database"
 
-describe("Testes das rotas de despesas", () => {
+describe("Testes das rotas de hospedagens", () => {
     let req: Partial<Request>
     let res: Partial<Response>
     let next: jest.Mock
@@ -32,30 +32,31 @@ describe("Testes das rotas de despesas", () => {
     })
 
     describe("Testes de validação", () => {
-        test("Erro 404 ao atualizar despesa inexistente", async () => {
+        test("Erro 404 ao atualizar hospedagem inexistente", async () => {
             req.params = { id: "999" }
             req.body = { 
-                tipoDespesa: "Transporte", 
-                gasto: 100, 
-                dataDespesa: "2023-01-01", 
-                viagemId: 1 
+                localHospedagem: "Hotel A",
+                dataCheckin: "2023-01-01",
+                dataCheckout: "2023-01-10",
+                gastoTotal: 800,
+                viagemId: 1
             };
 
-            (DespesaModel.findByPk as jest.Mock) = jest.fn().mockResolvedValue(null)
+            jest.spyOn(HospedagemModel, "findByPk").mockResolvedValue(null)
             
-            await updateDespesa(req as Request<{ id: string }>, res as Response)
+            await updateHospedagem(req as Request<{ id: string }>, res as Response)
             
             expect(res.status).toHaveBeenCalledWith(404)
-            expect(res.json).toHaveBeenCalledWith({ error: "Despesa não encontrada" })
+            expect(res.json).toHaveBeenCalledWith({ error: "Hospedagem não encontrada" })
         })
 
-        test("Erro 404 ao deletar despesa inexistente", async () => {
-            (DespesaModel.findByPk as jest.Mock) = jest.fn().mockResolvedValue(null)
+        test("Erro 404 ao deletar hospedagem inexistente", async () => {
+            jest.spyOn(HospedagemModel, "findByPk").mockResolvedValue(null)
             
-            await deleteDespesaById(req as Request<{ id: string }>, res as Response)
+            await deleteHospedagemById(req as Request<{ id: string }>, res as Response)
             
             expect(res.status).toHaveBeenCalledWith(404)
-            expect(res.json).toHaveBeenCalledWith({ error: "Despesa não encontrada" })
+            expect(res.json).toHaveBeenCalledWith({ error: "Hospedagem não encontrada" })
         })
     })
 
@@ -65,53 +66,65 @@ describe("Testes das rotas de despesas", () => {
             next()
         })
 
-        test("GET /despesas deve exigir autenticação", async () => {
+        test("GET /hospedagens deve exigir autenticação", async () => {
             jest.mock("../src/middleware/authMiddleware", () => ({
                 authMiddleware: unauthenticatedAuthMiddleware
             }))
 
-            const response = await request(app).get("/despesas")
+            const response = await request(app).get("/hospedagens")
             expect(response.status).toBe(401)
             expect(response.body.error).toBe("Acesso não autorizado")
         })
 
-        test("GET /despesa/:id deve exigir autenticação", async () => {
+        test("GET /hospedagem/:id deve exigir autenticação", async () => {
             jest.mock("../src/middleware/authMiddleware", () => ({
                 authMiddleware: unauthenticatedAuthMiddleware
             }))
 
-            const response = await request(app).get("/despesa/1")
+            const response = await request(app).get("/hospedagem/1")
             expect(response.status).toBe(401)
             expect(response.body.error).toBe("Acesso não autorizado")
         })
 
-        test("POST /cadastro-despesa deve exigir autenticação", async () => {
-            jest.mock("../src/middleware/authMiddleware", () => ({
-                authMiddleware: unauthenticatedAuthMiddleware
-            }))
-
-            const response = await request(app)
-                .post("/cadastro-despesa")
-                .send({ tipoDespesa: "Transporte", gasto: 100 })
-            
-            expect(response.status).toBe(401)
-            expect(response.body.error).toBe("Acesso não autorizado")
-        })
-
-        test("PUT /despesa/:id deve exigir autenticação", async () => {
+        test("POST /cadastro-hospedagem deve exigir autenticação", async () => {
             jest.mock("../src/middleware/authMiddleware", () => ({
                 authMiddleware: unauthenticatedAuthMiddleware
             }))
 
             const response = await request(app)
-                .put("/despesa/1")
-                .send({ tipoDespesa: "Transporte", gasto: 150 })
+                .post("/cadastro-hospedagem")
+                .send({ 
+                    localHospedagem: "Hotel A",
+                    dataCheckin: "2023-01-01",
+                    dataCheckout: "2023-01-10",
+                    gastoTotal: 800,
+                    viagemId: 1  
+                })
             
             expect(response.status).toBe(401)
             expect(response.body.error).toBe("Acesso não autorizado")
         })
 
-        test("DELETE /despesa/:id deve exigir autenticação", async () => {
+        test("PUT /hospedagem/:id deve exigir autenticação", async () => {
+            jest.mock("../src/middleware/authMiddleware", () => ({
+                authMiddleware: unauthenticatedAuthMiddleware
+            }))
+
+            const response = await request(app)
+                .put("/hospedagem/1")
+                .send({ 
+                    localHospedagem: "Hotel A",
+                    dataCheckin: "2023-01-01",
+                    dataCheckout: "2023-01-10",
+                    gastoTotal: 800,
+                    viagemId: 1
+                })
+            
+            expect(response.status).toBe(401)
+            expect(response.body.error).toBe("Acesso não autorizado")
+        })
+
+        test("DELETE /hospedagem/:id deve exigir autenticação", async () => {
             jest.mock("../src/middleware/authMiddleware", () => ({
                 authMiddleware: unauthenticatedAuthMiddleware
             }))

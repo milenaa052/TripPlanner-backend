@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 import request from "supertest"
 import { updateViagem, deleteViagemById } from "../src/controllers/ViagemController"
 import ViagemModel from "../src/models/ViagemModel"
-import { app, server } from "../src/index"
+import app from "../src/app"
 import sequelize from "../src/config/database"
 
 describe("Testes das rotas de viagens", () => {
@@ -29,7 +29,6 @@ describe("Testes das rotas de viagens", () => {
 
     afterAll(async () => {
         await sequelize.close()
-        server.close()
     })
 
     describe("Testes de validação", () => {
