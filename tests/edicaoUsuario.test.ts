@@ -64,6 +64,36 @@ describe("Testes de edição de usuário", () => {
         expect(res.json).toHaveBeenCalledWith({ error: "Usuario não encontrado" })
     })
 
+    test("Erro 400 porque o email não pode ser alterado", async () => {
+        req.body = {
+            usuario: { usuario: { idUsuario: 1 } },
+            nome: "Milena",
+            cpfUsuario: "12345678901",
+            senha: "SenhaForte123@",
+            email: "novoemail@example.com"
+        };
+
+        const mockUsuario = {
+            nome: "Antigo",
+            cpfUsuario: "11111111111",
+            senha: "SenhaAntiga123@",
+            email: "emailoriginal@example.com",
+            save: jest.fn()
+        };
+
+        (UsuarioModel.findByPk as jest.Mock).mockResolvedValue(mockUsuario);
+        cpfValidator.cpf.isValid = jest.fn().mockReturnValue(true);
+        (UsuarioModel.validarNivelSenha as jest.Mock).mockReturnValue({ valida: true });
+
+        await updateUsuario(req as Request<{ id: string }>, res as Response)
+
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.json).toHaveBeenCalledWith({
+            message: "Não é permitido alterar o email"
+        })
+    })
+
+
     test("Erro 400 porque o CPF é inválido", async () => {
         req.body = {
             usuario: { usuario: { idUsuario: 1 } },
@@ -99,7 +129,7 @@ describe("Testes de edição de usuário", () => {
         })
 
         cpfValidator.cpf.isValid = jest.fn().mockReturnValue(true);
-        
+
         (UsuarioModel.validarNivelSenha as jest.Mock).mockReturnValue({
             valida: false,
             requisitos: "A senha deve ter pelo menos 8 caracteres."

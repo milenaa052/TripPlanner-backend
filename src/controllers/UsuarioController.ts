@@ -64,7 +64,7 @@ export const updateUsuario = async (req: Request<{id: string}>, res: Response) =
                 .json({error: "Você não tem permissão para editar este usuário"})
         }
 
-        const { nome, cpfUsuario, senha } = req.body
+        const { nome, cpfUsuario, email, senha } = req.body
 
         if(!nome || !cpfUsuario || !senha) {
             return res.status(400)
@@ -76,6 +76,10 @@ export const updateUsuario = async (req: Request<{id: string}>, res: Response) =
         if(!usuario) {
             return res.status(404)
                 .json({error: "Usuario não encontrado"})
+        }
+
+        if (email && email !== usuario.email) {
+            return res.status(400).json({ message: "Não é permitido alterar o email" })
         }
 
         if (!cpf.isValid(cpfUsuario)) {
