@@ -81,6 +81,11 @@ export const updateUsuario = async (req: Request<{ id: string }>, res: Response)
             return res.status(400).json({ message: "Não é permitido alterar o email" })
         }
 
+        if (!cpf.isValid(cpfUsuario)) {
+            return res.status(400)
+                .json({error: "CPF inválido ou não existe"})
+        }
+
         usuario.nome = nome
         usuario.cpfUsuario = cpfUsuario
 
@@ -94,7 +99,7 @@ export const updateUsuario = async (req: Request<{ id: string }>, res: Response)
             const validacaoNivelSenha = UsuarioModel.validarNivelSenha(novaSenha)
 
             if (!validacaoNivelSenha.valida) {
-                return res.status(400).json({
+                return res.status(400).json({ 
                     error: "Senha muito fraca",
                     detalhes: validacaoNivelSenha.requisitos
                 })
