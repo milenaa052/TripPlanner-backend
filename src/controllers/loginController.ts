@@ -1,4 +1,5 @@
-import { Request, Response } from "express"
+import { Request, Response, NextFunction } from "express"
+import jwt from "jsonwebtoken"
 import { gerarToken } from "../utils/jwt"
 import UsuarioModel from "../models/UsuarioModel"
 
@@ -47,5 +48,29 @@ export const loginUsuario = async (req: Request, res: Response) => {
     } catch (error) {
         console.error("Erro no login:", error)
         return res.status(500).json({ error: "Erro interno no servidor" })
+    }
+}
+
+export const usuarioLogado = (req: Request, res: Response) => {
+    const authHeader = req.headers.authorization
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ error: "Token não fornecido ou mal formatado" })
+    }
+
+    const token = authHeader.split(" ")[1]
+
+    try {
+        const segredo = process.env.JWT_SECRET || "chave"
+
+        const decoded = jwt.verify(token, segredo)
+
+        return res.status(200).json({
+            mensagem: "Usuário autenticado com sucesso",
+            usuario: decoded
+        })
+    } catch (error) {
+        console.error("Erro ao verificar token:", error)
+        return res.status(401).json({ error: "Token inválido ou expirado" })
     }
 }
