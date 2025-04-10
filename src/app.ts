@@ -36,12 +36,12 @@ app.get('/api/cidades', async (req, res) => {
   }
 })
 
+app.use(loginRoutes)
 app.use(UsuarioRoutes)
 app.use(ViagemRoutes)
 app.use(DespesaRoutes)
 app.use(HospedagemRoutes)
 app.use(TransporteRoutes)
 app.use(PasseioRoutes)
-app.use(loginRoutes)
 
 export default app

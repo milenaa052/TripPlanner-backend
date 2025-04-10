@@ -49,3 +49,15 @@ export const loginUsuario = async (req: Request, res: Response) => {
         return res.status(500).json({ error: "Erro interno no servidor" })
     }
 }
+
+export const getUsuarioLogado = async (req: Request, res: Response) => {
+    console.log("Usuário logado:", req.usuario)
+
+    if (!req.usuario) {
+        return res.status(401).json({ error: "Usuário não autenticado" })
+    }
+
+    return res.status(200).json({
+        usuario: req.usuario
+    })
+}
