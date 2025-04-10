@@ -56,7 +56,7 @@ export const createUsuario = async (req: Request, res: Response) => {
 
 export const updateUsuario = async (req: Request<{ id: string }>, res: Response) => {
     try {
-        const usuarioLogado = req.body.usuario.usuario.idUsuario
+        const usuarioLogado = req.body.usuario.idUsuario
         const idUsuarioAtualizar = Number(req.params.id)
 
         if (Number(usuarioLogado) !== idUsuarioAtualizar) {
