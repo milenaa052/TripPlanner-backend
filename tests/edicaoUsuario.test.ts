@@ -19,9 +19,7 @@ describe("Testes de edição de usuário", () => {
             params: { id: "1" },
             body: {
                 usuario: {
-                    usuario: {
-                        idUsuario: 1
-                    }
+                    idUsuario: 1 
                 }
             }
         } as Request<{ id: string }>
@@ -35,7 +33,7 @@ describe("Testes de edição de usuário", () => {
     })
 
     test("Erro 403 porque o usuário não tem permissão para editar", async () => {
-        req.body.usuario.usuario.idUsuario = 2 // Simula outro usuário
+        req.body.usuario.idUsuario = 2 // Simula outro usuário
 
         await updateUsuario(req as Request<{ id: string }>, res as Response)
 
@@ -52,7 +50,7 @@ describe("Testes de edição de usuário", () => {
 
     test("Erro 404 porque o usuário não foi encontrado", async () => {
         req.body = {
-            usuario: { usuario: { idUsuario: 1 } },
+            usuario: { idUsuario: 1 },
             nome: "Milena", cpfUsuario: "12345678901", senha: "SenhaForte123@"
         };
 
@@ -66,7 +64,7 @@ describe("Testes de edição de usuário", () => {
 
     test("Erro 400 porque o email não pode ser alterado", async () => {
         req.body = {
-            usuario: { usuario: { idUsuario: 1 } },
+            usuario: { idUsuario: 1 },
             nome: "Milena",
             cpfUsuario: "12345678901",
             senha: "SenhaForte123@",
@@ -96,7 +94,7 @@ describe("Testes de edição de usuário", () => {
 
     test("Erro 400 porque o CPF é inválido", async () => {
         req.body = {
-            usuario: { usuario: { idUsuario: 1 } },
+            usuario: { idUsuario: 1 },
             nome: "Milena", cpfUsuario: "12345678901", senha: "SenhaForte123@"
         };
 
@@ -117,16 +115,23 @@ describe("Testes de edição de usuário", () => {
 
     test("Erro 400 porque a senha é muito fraca", async () => {
         req.body = {
-            usuario: { usuario: { idUsuario: 1 } },
-            nome: "Milena", cpfUsuario: "12345678901", senha: "fraca"
+            usuario: { idUsuario: 1 },
+            nome: "Milena",
+            cpfUsuario: "12345678901",
+            senhaAtual: "SenhaAntiga123@",
+            novaSenha: "fraca"
         };
 
-        (UsuarioModel.findByPk as jest.Mock).mockResolvedValue({
-            nome: "",
-            cpfUsuario: "",
-            senha: "",
+        const mockUsuario = {
+            nome: "Antigo",
+            cpfUsuario: "11111111111",
+            senha: "SenhaAntiga123@",
+            email: "milena@example.com",
+            validarSenha: jest.fn().mockResolvedValue(true),
             save: jest.fn()
-        })
+        };
+
+        (UsuarioModel.findByPk as jest.Mock).mockResolvedValue(mockUsuario);
 
         cpfValidator.cpf.isValid = jest.fn().mockReturnValue(true);
 
@@ -146,17 +151,20 @@ describe("Testes de edição de usuário", () => {
 
     test("Atualização de usuário realizado com sucesso", async () => {
         req.body = {
-            usuario: { usuario: { idUsuario: 1 } },
+            usuario: { idUsuario: 1 },
             nome: "Milena",
             cpfUsuario: "12345678901",
-            senha: "SenhaForte123@"
+            senhaAtual: "SenhaAntiga123@",
+            novaSenha: "SenhaForte123@"
         };
 
         const mockUsuario = {
             nome: "Antigo",
             cpfUsuario: "11111111111",
             senha: "SenhaAntiga123@",
-            save: jest.fn().mockResolvedValue(true)
+            email: "milena@example.com",
+            validarSenha: jest.fn().mockResolvedValue(true),
+            save: jest.fn()
         };
 
         (UsuarioModel.findByPk as jest.Mock).mockResolvedValue(mockUsuario);
