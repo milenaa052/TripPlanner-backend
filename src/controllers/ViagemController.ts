@@ -26,7 +26,7 @@ export const createViagem = async (req: Request, res: Response) => {
                 .json({error: "Todos os campos são obrigatórios"})
         }
 
-        const idUsuario = req.body.usuario.usuario.idUsuario
+        const idUsuario = req.body.usuario.idUsuario
         if (!idUsuario) {
             return res.status(401).json({ error: "Usuário não autenticado" })
         }
@@ -56,7 +56,7 @@ export const updateViagem = async (req: Request<{id: string}>, res: Response) =>
                 .json({error: "Todos os campos são obrigatórios"})
         }
 
-        const idUsuario = req.body.usuario.usuario.idUsuario
+        const idUsuario = req.body.usuario.idUsuario
         if (!idUsuario) {
             return res.status(401).json({ error: "Usuário não autenticado" })
         }
