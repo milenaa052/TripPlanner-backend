@@ -51,7 +51,6 @@ export const loginUsuario = async (req: Request, res: Response) => {
 }
 
 export const getUsuarioLogado = async (req: Request, res: Response) => {
-    console.log("Usuário logado:", req.usuario)
 
     if (!req.usuario) {
         return res.status(401).json({ error: "Usuário não autenticado" })
