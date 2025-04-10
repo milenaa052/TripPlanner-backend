@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 import ViagemModel from "../models/ViagemModel"
 
 export const getViagens = async (req: Request, res: Response) => {
-    const idUsuario = req.body.usuario.usuario.idUsuario
+    const idUsuario = req.body.usuario.idUsuario
 
     const viagens = await ViagemModel.findAll({
         where: {
