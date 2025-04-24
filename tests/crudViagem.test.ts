@@ -41,9 +41,7 @@ describe("Testes das rotas de viagens", () => {
                 dataInicial: "2023-01-01",
                 dataFinal: "2023-01-10", 
                 usuario: {
-                    usuario: {
-                        idUsuario: 1
-                    }
+                    idUsuario: 1 
                 } 
             };
 
